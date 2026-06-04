@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAP BASIS Consultant — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{--accent:#1a1a2e;--accent2:#e94560;--soft:#f5f5f0;--border:rgba(0,0,0,0.09);--text:#1a1a1a;--muted:#666;--card:#fff;}
+  body{font-family:'DM Sans',sans-serif;background:var(--soft);color:var(--text);line-height:1.6;padding:2rem 1rem;}
+  .port{max-width:900px;margin:0 auto;}
+  .hero{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;padding:2.5rem;background:var(--card);border-radius:20px;border:0.5px solid var(--border);margin-bottom:1.5rem;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:var(--accent2);opacity:0.06;border-radius:50%;}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;background:#f0f7ff;color:#1a5cb5;font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;margin-bottom:12px;border:0.5px solid #c8dfff;}
+  .hero h1{font-family:'DM Serif Display',serif;font-size:2.4rem;font-weight:400;line-height:1.1;margin-bottom:6px;}
+  .hero h1 span{color:var(--accent2);font-style:italic;}
+  .hero-role{font-size:1rem;color:var(--muted);margin-bottom:16px;}
+  .hero-contacts{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:5px 10px;border-radius:8px;border:0.5px solid var(--border);color:var(--muted);background:var(--soft);}
+  .avatar-wrap{text-align:center;}
+  .avatar{width:120px;height:120px;border-radius:16px;background:linear-gradient(135deg,#e8edf5,#c8d4e8);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:2.5rem;color:#4a6fa5;border:2px solid var(--border);}
+  .avail-dot{display:inline-block;width:10px;height:10px;background:#22c55e;border-radius:50%;margin-right:4px;}
+  .avail-label{font-size:11px;color:#22c55e;margin-top:6px;font-weight:500;}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem;}
+  .stat-card{background:var(--card);border-radius:14px;border:0.5px solid var(--border);padding:1rem 1.2rem;text-align:center;}
+  .stat-num{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--accent);line-height:1;}
+  .stat-label{font-size:11px;color:var(--muted);margin-top:4px;}
+  .stat-accent{color:var(--accent2);}
+  .section{background:var(--card);border-radius:16px;border:0.5px solid var(--border);padding:1.5rem;margin-bottom:1.5rem;}
+  .sec-head{display:flex;align-items:center;gap:8px;margin-bottom:1.2rem;}
+  .sec-head i{font-size:18px;color:var(--accent2);}
+  .sec-title{font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+  .skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;}
+  .skill-group h4{font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+  .skill-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px;font-weight:500;color:var(--text);}
+  .skill-item i.ti-circle-check{font-size:14px;color:var(--accent2);opacity:0.8;}
+  .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+  .tag{font-size:11px;padding:3px 10px;border-radius:6px;border:0.5px solid var(--border);color:var(--muted);background:var(--soft);}
+  .tag.highlight{background:#fff5f5;color:#b91c1c;border-color:#fecaca;}
+  .exp-item{display:grid;grid-template-columns:auto 1fr;gap:0 1rem;padding-bottom:1.5rem;position:relative;}
+  .exp-item:last-child{padding-bottom:0;}
+  .exp-item:last-child .exp-line{display:none;}
+  .exp-dot-col{display:flex;flex-direction:column;align-items:center;}
+  .exp-dot{width:10px;height:10px;border-radius:50%;background:var(--accent2);margin-top:4px;flex-shrink:0;}
+  .exp-line{width:1px;flex:1;background:var(--border);margin:4px 0;}
+  .exp-date{font-size:11px;color:var(--muted);margin-bottom:2px;}
+  .exp-title{font-size:14px;font-weight:600;margin-bottom:1px;}
+  .exp-company{font-size:12px;color:var(--muted);}
+  .exp-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+  .exp-tag{font-size:10px;padding:2px 8px;border-radius:5px;background:var(--soft);color:var(--muted);border:0.5px solid var(--border);}
+  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .proj-card{border-radius:12px;border:0.5px solid var(--border);padding:1rem;background:var(--soft);}
+  .proj-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px;}
+  .proj-name{font-size:13px;font-weight:600;line-height:1.3;}
+  .proj-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap;flex-shrink:0;}
+  .badge-impl{background:#e8f5e9;color:#2e7d32;}
+  .badge-int{background:#e3f2fd;color:#1565c0;}
+  .badge-cloud{background:#fce4ec;color:#c62828;}
+  .proj-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+  .proj-highlight{font-size:11px;font-weight:600;color:var(--accent2);margin-top:6px;}
+  .cert-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--border);}
+  .cert-item:last-child{border-bottom:none;}
+  .cert-icon{width:36px;height:36px;border-radius:8px;background:#fff5e6;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .cert-icon i{font-size:18px;color:#e65100;}
+  .cert-name{font-size:13px;font-weight:500;}
+  .cert-sub{font-size:11px;color:var(--muted);}
+  .cert-year{font-size:12px;font-weight:600;color:var(--accent2);margin-left:auto;}
+  .int-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .int-item{text-align:center;padding:14px 8px;border-radius:12px;background:var(--soft);border:0.5px solid var(--border);}
+  .int-item i{font-size:22px;color:var(--accent2);display:block;margin-bottom:6px;}
+  .int-name{font-size:11px;font-weight:500;line-height:1.3;}
+  .banners-row{display:flex;gap:1rem;margin-bottom:1.5rem;}
+  .savings-banner{flex:1;background:var(--accent);border-radius:14px;padding:1.2rem 1.5rem;display:flex;flex-direction:column;justify-content:between;}
+  .savings-banner.fue-banner{background:linear-gradient(135deg, #1f1f3a, #121222);border-left:4px solid var(--accent2);}
+  .savings-left{color:#fff;margin-bottom:1rem;}
+  .savings-title{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;margin-bottom:4px;}
+  .savings-amount{font-family:'DM Serif Display',serif;font-size:2.2rem;color:#fff;line-height:1;}
+  .savings-sub{font-size:11px;opacity:0.6;margin-top:4px;}
+  .savings-right{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-top:1px solid rgba(255,255,255,0.1);padding-top:0.8rem;}
+  .savings-stat{color:#fff;font-size:10px;opacity:0.8;line-height:1.3;}
+  .savings-stat strong{display:block;font-size:13px;opacity:1;color:#fff;}
+  .fue-accent{color:var(--accent2) !important;}
+  .footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--muted);}
+  @media print{body{background:#fff;}@page{margin:1cm;}}
+  @media(max-width:768px){.banners-row{flex-direction:column;}}
+  @media(max-width:600px){
+    .hero{grid-template-columns:1fr;}.avatar-wrap{display:none;}
+    .stats-row{grid-template-columns:repeat(2,1fr);}
+    .skills-grid{grid-template-columns:1fr;}
+    .proj-grid{grid-template-columns:1fr;}
+    .int-grid{grid-template-columns:repeat(2,1fr);}
+  }
+
+  /* ===== EDIT MODE STYLES ===== */
+  body.edit-mode [contenteditable]{
+    outline:none;
+    border-bottom:1.5px dashed var(--accent2);
+    cursor:text;
+    min-width:20px;
+    display:inline-block;
+  }
+  body.edit-mode [contenteditable]:hover{background:rgba(233,69,96,0.05);border-radius:3px;}
+  body.edit-mode [contenteditable]:focus{background:rgba(233,69,96,0.08);border-radius:3px;}
+
+  /* Edit toolbar */
+  #edit-toolbar{
+    position:fixed;top:0;left:0;right:0;z-index:9999;
+    background:var(--accent);color:#fff;
+    padding:8px 16px;
+    display:flex;align-items:center;gap:10px;
+    font-size:12px;font-family:'DM Sans',sans-serif;
+    box-shadow:0 2px 12px rgba(0,0,0,0.3);
+  }
+  #edit-toolbar .tb-logo{font-family:'DM Serif Display',serif;font-size:15px;color:var(--accent2);margin-right:6px;}
+  #edit-toolbar .tb-status{opacity:0.7;font-size:11px;}
+  #edit-toolbar .tb-spacer{flex:1;}
+  .tb-btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:5px;transition:background .15s;}
+  .tb-btn:hover{background:rgba(255,255,255,0.22);}
+  .tb-btn.primary{background:var(--accent2);border-color:var(--accent2);}
+  .tb-btn.primary:hover{background:#c73550;}
+  .tb-btn.danger{background:rgba(255,80,80,0.2);border-color:rgba(255,80,80,0.4);}
+  #save-status{font-size:11px;padding:4px 10px;border-radius:5px;opacity:0;}
+  #save-status.show{opacity:1;}
+  #save-status.ok{color:#4ade80;}
+  #save-status.err{color:#f87171;}
+
+  body.edit-mode{padding-top:50px;}
+
+  /* Item control buttons */
+  .item-controls{
+    display:none;
+    gap:4px;
+    align-items:center;
+    margin-left:8px;
+    flex-shrink:0;
+  }
+  body.edit-mode .item-controls{display:inline-flex;}
+  .ic-btn{
+    width:22px;height:22px;border-radius:5px;border:1px solid var(--border);
+    background:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+    font-size:12px;color:var(--muted);transition:all .15s;padding:0;
+  }
+  .ic-btn:hover{border-color:var(--accent2);color:var(--accent2);background:#fff5f5;}
+  .ic-btn.del:hover{border-color:#ef4444;color:#ef4444;background:#fef2f2;}
+  .ic-btn.dup:hover{border-color:#3b82f6;color:#3b82f6;background:#eff6ff;}
+
+  /* Hide ALL row-actions by default (view mode) */
+  .row-actions{display:none !important;}
+
+  /* Row wrappers in edit mode */
+  body.edit-mode .editable-row{
+    position:relative;border-radius:8px;transition:background .15s;
+    padding:3px 6px;margin:-3px -6px;
+  }
+  body.edit-mode .editable-row:hover{background:rgba(233,69,96,0.04);}
+  body.edit-mode .editable-row .row-actions{
+    display:flex !important;gap:3px;
+    position:absolute;right:4px;top:50%;transform:translateY(-50%);
+    opacity:0;transition:opacity .15s;
+  }
+  body.edit-mode .editable-row:hover .row-actions{opacity:1 !important;}
+
+  /* Clickable chips in view mode */
+  .chip-link{text-decoration:none;color:inherit;}
+  .chip-link .chip{cursor:pointer;transition:background .15s,border-color .15s;}
+  .chip-link .chip:hover{background:#e8edf5;border-color:#aab8d0;}
+
+  /* Clickable int-item in view mode */
+  .int-link{text-decoration:none;color:inherit;display:contents;}
+  .int-item.has-link{cursor:pointer;transition:background .15s,border-color .15s;}
+  .int-item.has-link:hover{background:#e8edf5;border-color:#aab8d0;}
+
+  /* Clickable cert-item in view mode */
+  .cert-link{text-decoration:none;color:inherit;}
+  .cert-link .cert-item{cursor:pointer;transition:background .15s;}
+  .cert-link .cert-item:hover{background:var(--soft);}
+
+  /* Avatar upload in edit mode */
+  body.edit-mode #hero-avatar{cursor:pointer;position:relative;}
+  body.edit-mode #hero-avatar::after{
+    content:'📷 Upload';position:absolute;inset:0;background:rgba(0,0,0,0.45);
+    color:#fff;font-size:11px;font-family:'DM Sans',sans-serif;font-style:normal;
+    display:flex;align-items:center;justify-content:center;border-radius:16px;
+    opacity:0;transition:opacity .2s;
+  }
+  body.edit-mode #hero-avatar:hover::after{opacity:1;}
+
+  /* Add buttons */
+  .add-btn{
+    display:none;
+    align-items:center;gap:5px;
+    font-size:11px;color:var(--accent2);cursor:pointer;
+    border:1px dashed rgba(233,69,96,0.35);border-radius:7px;
+    padding:5px 10px;margin-top:8px;
+    background:rgba(233,69,96,0.04);
+    transition:all .15s;font-family:'DM Sans',sans-serif;
+    width:fit-content;
+  }
+  body.edit-mode .add-btn{display:inline-flex;}
+  .add-btn:hover{background:rgba(233,69,96,0.1);border-color:var(--accent2);}
+
+  /* section edit header highlight */
+  body.edit-mode .section,.body.edit-mode .stat-card{position:relative;}
+  body.edit-mode .section:hover::after,.body.edit-mode .stat-card:hover::after{
+    content:'';position:absolute;inset:0;border-radius:inherit;border:1.5px dashed rgba(233,69,96,0.25);pointer-events:none;
+  }
+
+  /* modal */
+  .edit-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center;}
+  .edit-modal-bg.open{display:flex;}
+  .edit-modal{background:#fff;border-radius:14px;padding:1.5rem;min-width:340px;max-width:500px;width:90%;}
+  .edit-modal h3{font-size:14px;font-weight:600;margin-bottom:1rem;}
+  .edit-modal label{font-size:11px;color:var(--muted);display:block;margin-bottom:3px;margin-top:10px;}
+  .edit-modal input,.edit-modal textarea,.edit-modal select{
+    width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:7px;
+    font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;
+  }
+  .edit-modal textarea{min-height:80px;resize:vertical;}
+  .edit-modal input:focus,.edit-modal textarea:focus{border-color:var(--accent2);}
+  .modal-btns{display:flex;gap:8px;margin-top:1.2rem;justify-content:flex-end;}
+  .modal-cancel{background:var(--soft);border:1px solid var(--border);padding:7px 16px;border-radius:7px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;}
+  .modal-save{background:var(--accent2);color:#fff;border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;}
+
+  /* supabase config panel */
+  #supabase-cfg{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999999;align-items:center;justify-content:center;
+  }
+  #supabase-cfg.open{display:flex;}
+  #supabase-cfg .cfg-box{background:#fff;border-radius:16px;padding:2rem;max-width:480px;width:90%;}
+  #supabase-cfg h2{font-size:16px;font-weight:600;margin-bottom:6px;}
+  #supabase-cfg p{font-size:12px;color:var(--muted);margin-bottom:1.2rem;line-height:1.6;}
+  #supabase-cfg label{font-size:11px;color:var(--muted);display:block;margin-bottom:3px;margin-top:10px;}
+  #supabase-cfg input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;}
+  #supabase-cfg input:focus{border-color:var(--accent2);}
+  #cfg-save{background:var(--accent2);color:#fff;border:none;padding:9px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;margin-top:1.2rem;width:100%;}
+  .cfg-note{font-size:11px;color:var(--muted);margin-top:10px;padding:10px;background:var(--soft);border-radius:8px;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<!-- SUPABASE CONFIG PANEL -->
+<div id="supabase-cfg">
+  <div class="cfg-box">
+    <h2>🔌 Connect Supabase</h2>
+    <p>To save your edits and sync them to all visitors, connect your Supabase project. This only needs to be done once — credentials are saved in your browser.</p>
+    <label>Supabase Project URL</label>
+    <input id="cfg-url" type="text" placeholder="https://xxxxxxxxxxxx.supabase.co" />
+    <label>Supabase Anon Public Key</label>
+    <input id="cfg-key" type="text" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV..." />
+    <div class="cfg-note">
+      📋 <strong>Setup instructions:</strong><br>
+      1. Go to <strong>supabase.com</strong> → your project → Settings → API<br>
+      2. Copy the <strong>Project URL</strong> and <strong>anon public</strong> key above<br>
+      3. In your Supabase SQL editor, run:<br>
+      <code style="font-size:10px;display:block;margin-top:6px;background:#eee;padding:6px;border-radius:5px;">
+CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTAMPTZ DEFAULT NOW());
+      </code>
+    </div>
+    <button id="cfg-save">Save & Connect</button>
+    <button id="cfg-skip" style="background:none;border:none;color:var(--muted);font-size:12px;width:100%;margin-top:8px;cursor:pointer;font-family:'DM Sans',sans-serif;">Skip for now (changes won't be saved to cloud)</button>
+  </div>
+</div>
+
+<!-- EDIT TOOLBAR (only shown in edit mode) -->
+<div id="edit-toolbar" style="display:none;">
+  <span class="tb-logo">Portfolio</span>
+  <span style="color:var(--accent2);font-size:11px;">EDIT MODE</span>
+  <span class="tb-status" id="tb-status">● Connected</span>
+  <span class="tb-spacer"></span>
+  <span id="save-status"></span>
+  <button class="tb-btn" onclick="openCfgPanel()"><i class="ti ti-settings"></i> Supabase Config</button>
+  <button class="tb-btn primary" onclick="saveAll()"><i class="ti ti-cloud-upload"></i> Save Changes</button>
+</div>
+
+<!-- ADD ITEM MODAL -->
+<div class="edit-modal-bg" id="modal-bg">
+  <div class="edit-modal" id="modal-box">
+    <h3 id="modal-title">Add Item</h3>
+    <div id="modal-fields"></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-save" onclick="confirmModal()">Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="port" id="main-port">
+
+  <!-- HERO -->
+  <div class="hero" id="section-hero">
+    <div>
+      <div class="hero-badge" id="hero-badge"><i class="ti ti-building"></i> <span contenteditable="false" id="hero-badge-text">Open to Opportunities</span></div>
+      <h1 id="hero-h1">SAP <span contenteditable="false" id="hero-h1-main">SAP</span> <span style="color:var(--accent2);font-style:italic;" contenteditable="false" id="hero-h1-accent">Basis</span><br><span contenteditable="false" id="hero-h1-sub">Consultant</span></h1>
+      <div class="hero-role" contenteditable="false" id="hero-role">SAP BASIS · SAP Fiori · SAP BTP · Azure Cloud · S/4HANA</div>
+      <div class="hero-contacts" id="hero-contacts">
+        <a class="chip-link" href="mailto:your.email@domain.com" data-chip-type="email" id="chip-email-link"><span class="chip"><i class="ti ti-mail"></i> <span contenteditable="false" id="chip-email-text">your.email@domain.com</span></span></a>
+        <a class="chip-link" href="tel:+91XXXXXXXXXX" data-chip-type="phone" id="chip-phone-link"><span class="chip"><i class="ti ti-phone"></i> <span contenteditable="false" id="chip-phone-text">+91 XXXXX XXXXX</span></span></a>
+        <span class="chip"><i class="ti ti-map-pin"></i> <span contenteditable="false">India</span></span>
+        <a class="chip-link" href="https://linkedin.com/in/yourprofile" data-chip-type="linkedin" id="chip-linkedin-link" target="_blank" rel="noopener"><span class="chip"><i class="ti ti-brand-linkedin"></i> <span contenteditable="false" id="chip-linkedin-text">LinkedIn Profile</span></span></a>
+      </div>
+      <button class="add-btn" onclick="addChip()"><i class="ti ti-plus"></i> Add Contact</button>
+    </div>
+    <div class="avatar-wrap">
+      <div class="avatar" contenteditable="false" id="hero-avatar">YN</div>
+      <div class="avail-label"><span class="avail-dot"></span><span contenteditable="false" id="hero-avail">Available</span></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" contenteditable="false">4+</div>
+      <div class="stat-label" contenteditable="false">Years Experience</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num stat-accent" contenteditable="false">9+</div>
+      <div class="stat-label" contenteditable="false">Major Integrations</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" contenteditable="false">3</div>
+      <div class="stat-label" contenteditable="false">S/4HANA Projects</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num stat-accent" contenteditable="false">1</div>
+      <div class="stat-label" contenteditable="false">Azure Certification</div>
+    </div>
+  </div>
+  <button class="add-btn" onclick="addStat()" style="margin-bottom:1.5rem;"><i class="ti ti-plus"></i> Add Stat</button>
+
+  <!-- BANNERS -->
+  <div class="banners-row" id="banners-row">
+    <div class="savings-banner" id="banner-cloud">
+      <div class="savings-left">
+        <div class="savings-title" contenteditable="false">Cloud Cost Optimization Achievement</div>
+        <div class="savings-amount" contenteditable="false">₹70.5 Lakhs</div>
+        <div class="savings-sub" contenteditable="false">Total savings delivered through Azure cloud landscape optimization</div>
+      </div>
+      <div class="savings-right" id="banner-cloud-stats">
+        <div class="savings-stat"><strong contenteditable="false">Auto Start/Stop</strong><span contenteditable="false">VM policies run</span></div>
+        <div class="savings-stat"><strong contenteditable="false">100% VMs</strong><span contenteditable="false">Backup coverage</span></div>
+        <div class="savings-stat"><strong contenteditable="false">ZTNA</strong><span contenteditable="false">PIP routing secure</span></div>
+      </div>
+    </div>
+    <div class="savings-banner fue-banner" id="banner-fue">
+      <div class="savings-left">
+        <div class="savings-title" contenteditable="false">SAP FUE License Optimisation</div>
+        <div class="savings-amount" contenteditable="false">110+ FUEs <span style="font-size:1.2rem;font-family:'DM Sans',sans-serif;font-weight:400;opacity:0.8;">Saved</span></div>
+        <div class="savings-sub" contenteditable="false">Optimized complex roles mapping to pull matrix back under structural compliance</div>
+      </div>
+      <div class="savings-right" id="banner-fue-stats">
+        <div class="savings-stat"><strong class="fue-accent" contenteditable="false">180+ → 70</strong><span contenteditable="false">FUE limit brought down</span></div>
+        <div class="savings-stat"><strong contenteditable="false">350+</strong><span contenteditable="false">Users streamlined</span></div>
+        <div class="savings-stat"><strong contenteditable="false">3,000+</strong><span contenteditable="false">Roles analyzed</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="section" id="section-skills">
+    <div class="sec-head"><i class="ti ti-code"></i><span class="sec-title">Technical Skills</span></div>
+    <div class="skills-grid" id="skills-grid">
+      <div class="skill-group" id="skill-group-0">
+        <h4 contenteditable="false">SAP Core</h4>
+        <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">SAP BASIS Administration</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
+        <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">SAP S/4HANA</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
+        <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">SAP Fiori</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
+        <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">SAP BTP</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
+        <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">SAP ECC</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
+        <button class="add-btn" onclick="addSkillItem(this.previousElementSibling.closest('.skill-group')||this.closest('.skill-group'))"><i class="ti ti-plus"></i> Add Skill</button>
+      </div>
+      <div class="skill-group" id="skill-group-1">
+        <h4 contenteditable="false">Cloud & Infrastructure</h4>
+        <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">Microsoft Azure</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
+        <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">SAP Mobile Start</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
+        <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">SSO Integration</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
+        <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">Azure DevOps</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
+        <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">Microsoft Fabric</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
+        <button class="add-btn" onclick="addSkillItem(this.closest('.skill-group'))"><i class="ti ti-plus"></i> Add Skill</button>
+      </div>
+    </div>
+    <button class="add-btn" onclick="addSkillGroup()" style="margin-top:1rem;"><i class="ti ti-plus"></i> Add Skill Group</button>
+    <div style="margin-top:1.5rem;">
+      <h4 style="font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;" contenteditable="false">Additional Expertise</h4>
+      <div class="tag-row" id="extra-tags">
+        <span class="tag highlight editable-row">HANA DB Administration<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag highlight editable-row">Transport Management<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag editable-row">User Management<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag editable-row">Solution Manager<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag editable-row">STMS<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag editable-row">System Refresh<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag highlight editable-row">SAP Public Cloud<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag editable-row">Kernel Upgrade<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag editable-row">Support Packages<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag editable-row">CCMS Monitoring<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag highlight editable-row">Azure ZTNA<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+        <span class="tag editable-row">Cron Job Scheduling<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      </div>
+      <button class="add-btn" onclick="addExtraTag()"><i class="ti ti-plus"></i> Add Tag</button>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="section" id="section-exp">
+    <div class="sec-head"><i class="ti ti-briefcase"></i><span class="sec-title">Experience</span></div>
+    <div id="exp-list">
+      <div class="exp-item" id="exp-0">
+        <div class="exp-dot-col"><div class="exp-dot"></div><div class="exp-line"></div></div>
+        <div class="exp-body" style="flex:1;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+            <div style="flex:1;">
+              <div class="exp-date" contenteditable="false">2022 – Present</div>
+              <div class="exp-title" contenteditable="false">SAP BASIS Consultant</div>
+              <div class="exp-company" contenteditable="false">Current Organization · Full-Time</div>
+              <div class="exp-desc" style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6;" contenteditable="false">Leading SAP BASIS operations across S/4HANA Private Cloud Greenfield implementation, rollout projects, and ECC support. Driving Azure cloud infrastructure, cost optimization, and critical system integrations with banking and Microsoft platforms.</div>
+              <div class="exp-tags" id="exp-0-tags">
+                <span class="exp-tag editable-row">S/4HANA Private Cloud<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+                <span class="exp-tag editable-row">Greenfield Implementation<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+                <span class="exp-tag editable-row">Rollout Projects<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+                <span class="exp-tag editable-row">ECC Support<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+                <span class="exp-tag editable-row">Azure Cloud<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+                <span class="exp-tag editable-row">SAP Fiori<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+                <span class="exp-tag editable-row">SAP BTP<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+              </div>
+              <button class="add-btn" onclick="addExpTag(this.closest('.exp-body').querySelector('.exp-tags'))"><i class="ti ti-plus"></i> Add Tag</button>
+            </div>
+            <div class="item-controls" style="margin-top:2px;">
+              <button class="ic-btn dup" title="Duplicate" onclick="dupExpItem(this)">⧉</button>
+              <button class="ic-btn del" title="Delete" onclick="delExpItem(this)">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="exp-item" id="exp-1">
+        <div class="exp-dot-col"><div class="exp-dot" style="background:#ccc;"></div><div class="exp-line"></div></div>
+        <div class="exp-body" style="flex:1;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+            <div style="flex:1;">
+              <div class="exp-date" contenteditable="false">2020 – 2022</div>
+              <div class="exp-title" contenteditable="false">Junior SAP BASIS Administrator</div>
+              <div class="exp-company" contenteditable="false">Previous Organization · Full-Time</div>
+              <div class="exp-desc" style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6;" contenteditable="false">SAP system administration, user management, transport requests, system monitoring, and ECC landscape maintenance.</div>
+              <div class="exp-tags" id="exp-1-tags">
+                <span class="exp-tag editable-row">SAP ECC<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+                <span class="exp-tag editable-row">BASIS Admin<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+                <span class="exp-tag editable-row">HANA DB<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+                <span class="exp-tag editable-row">STMS<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+              </div>
+              <button class="add-btn" onclick="addExpTag(this.closest('.exp-body').querySelector('.exp-tags'))"><i class="ti ti-plus"></i> Add Tag</button>
+            </div>
+            <div class="item-controls" style="margin-top:2px;">
+              <button class="ic-btn dup" title="Duplicate" onclick="dupExpItem(this)">⧉</button>
+              <button class="ic-btn del" title="Delete" onclick="delExpItem(this)">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="exp-item" id="exp-2">
+        <div class="exp-dot-col"><div class="exp-dot" style="background:#ccc;"></div></div>
+        <div class="exp-body" style="flex:1;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+            <div style="flex:1;">
+              <div class="exp-date" contenteditable="false">2019 – 2020</div>
+              <div class="exp-title" contenteditable="false">SAP BASIS Trainee</div>
+              <div class="exp-company" contenteditable="false">Training Organization</div>
+              <div class="exp-desc" style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6;" contenteditable="false">Foundation in SAP landscape, BASIS administration, ABAP workbench, and system operations.</div>
+              <div class="exp-tags" id="exp-2-tags"></div>
+              <button class="add-btn" onclick="addExpTag(this.closest('.exp-body').querySelector('.exp-tags'))"><i class="ti ti-plus"></i> Add Tag</button>
+            </div>
+            <div class="item-controls" style="margin-top:2px;">
+              <button class="ic-btn dup" title="Duplicate" onclick="dupExpItem(this)">⧉</button>
+              <button class="ic-btn del" title="Delete" onclick="delExpItem(this)">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="add-btn" onclick="addExpItem()"><i class="ti ti-plus"></i> Add Experience</button>
+  </div>
+
+  <!-- INTEGRATIONS -->
+  <div class="section" id="section-int">
+    <div class="sec-head"><i class="ti ti-plug"></i><span class="sec-title">Key Integrations Delivered</span></div>
+    <div class="int-grid" id="int-grid">
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
+        <i class="ti ti-database-import"></i>
+        <div class="int-name" contenteditable="false">S/4HANA × Microsoft Fabric</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
+      </div>
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
+        <i class="ti ti-shield-lock"></i>
+        <div class="int-name" contenteditable="false">SSO for SAP Fiori</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
+      </div>
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
+        <i class="ti ti-device-mobile"></i>
+        <div class="int-name" contenteditable="false">SAP Mobile Start App</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
+      </div>
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
+        <i class="ti ti-world"></i>
+        <div class="int-name" contenteditable="false">Fiori Public Domain Integration</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
+      </div>
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
+        <i class="ti ti-building-bank"></i>
+        <div class="int-name" contenteditable="false">Banking Integration (Axis, RBL, SC)</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
+      </div>
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
+        <i class="ti ti-cloud"></i>
+        <div class="int-name" contenteditable="false">Azure Advisory Implementation</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
+      </div>
+    </div>
+    <button class="add-btn" onclick="addIntegration()"><i class="ti ti-plus"></i> Add Integration</button>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="section" id="section-proj">
+    <div class="sec-head"><i class="ti ti-stack-2"></i><span class="sec-title">Projects</span></div>
+    <div class="proj-grid" id="proj-grid">
+      <div class="proj-card editable-row">
+        <div class="proj-top">
+          <div class="proj-name" contenteditable="false">S/4HANA Pvt Cloud Greenfield Implementation</div>
+          <span class="proj-badge badge-impl" contenteditable="false">Implementation</span>
+        </div>
+        <div class="proj-desc" contenteditable="false">End-to-end SAP S/4HANA Private Cloud Greenfield implementation. Handled BASIS setup, system landscape, transport routes, and go-live activities.</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+      </div>
+      <div class="proj-card editable-row">
+        <div class="proj-top">
+          <div class="proj-name" contenteditable="false">S/4HANA Roll Out Project</div>
+          <span class="proj-badge badge-impl" contenteditable="false">Rollout</span>
+        </div>
+        <div class="proj-desc" contenteditable="false">Managed SAP system rollout across multiple business units. Coordinated transports, user provisioning, and system configuration across regions.</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+      </div>
+      <div class="proj-card editable-row">
+        <div class="proj-top">
+          <div class="proj-name" contenteditable="false">Banking Integration — 3 Banks</div>
+          <span class="proj-badge badge-int" contenteditable="false">Integration</span>
+        </div>
+        <div class="proj-desc" contenteditable="false">Integrated S/4HANA with Axis Bank, RBL Bank, and Standard Chartered for automated payment processing and reconciliation workflows.</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+      </div>
+      <div class="proj-card editable-row">
+        <div class="proj-top">
+          <div class="proj-name" contenteditable="false">Microsoft Fabric Integration</div>
+          <span class="proj-badge badge-int" contenteditable="false">Integration</span>
+        </div>
+        <div class="proj-desc" contenteditable="false">Architected SAP S/4HANA integration with Microsoft Fabric for real-time data analytics and enterprise reporting pipelines.</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+      </div>
+      <div class="proj-card editable-row">
+        <div class="proj-top">
+          <div class="proj-name" contenteditable="false">Azure Cloud Cost Optimization</div>
+          <span class="proj-badge badge-cloud" contenteditable="false">Cloud</span>
+        </div>
+        <div class="proj-desc" contenteditable="false">Implemented VM auto start/stop policies, Azure advisor recommendations, backup policies across all VMs, and cron job scheduling for data protection.</div>
+        <div class="proj-highlight" contenteditable="false">₹70.5 Lakh savings achieved</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+      </div>
+      <div class="proj-card editable-row">
+        <div class="proj-top">
+          <div class="proj-name" contenteditable="false">ZTNA Secure Network Routing</div>
+          <span class="proj-badge badge-cloud" contenteditable="false">Cloud</span>
+        </div>
+        <div class="proj-desc" contenteditable="false">Implemented PIP routing through Zero Trust Network Access (ZTNA) for secure, optimized connectivity across the SAP landscape.</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+      </div>
+    </div>
+    <button class="add-btn" onclick="addProject()"><i class="ti ti-plus"></i> Add Project</button>
+  </div>
+
+  <!-- CERTIFICATIONS -->
+  <div class="section" id="section-cert">
+    <div class="sec-head"><i class="ti ti-certificate"></i><span class="sec-title">Certifications</span></div>
+    <div id="cert-list">
+      <a class="cert-link" href="" data-cert-url="" target="_blank" rel="noopener" id="cert-link-0" onclick="certLinkClick(event,this)">
+      <div class="cert-item editable-row" id="cert-0">
+        <div class="cert-icon"><i class="ti ti-brand-azure"></i></div>
+        <div>
+          <div class="cert-name" contenteditable="false">AZ-400 — Azure DevOps Engineer Expert</div>
+          <div class="cert-sub" contenteditable="false">Microsoft Azure Certification</div>
+        </div>
+        <div class="cert-year" contenteditable="false">2024</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setCertUrl(this)">🔗</button></div>
+      </div>
+      </a>
+      <a class="cert-link" href="" data-cert-url="" target="_blank" rel="noopener" id="cert-link-1" onclick="certLinkClick(event,this)">
+      <div class="cert-item editable-row" id="cert-1">
+        <div class="cert-icon" style="background:#f0f7ff;"><i class="ti ti-building" style="color:#1565c0;"></i></div>
+        <div>
+          <div class="cert-name" contenteditable="false">SAP BASIS Administration</div>
+          <div class="cert-sub" contenteditable="false">SAP Certified Technology Associate</div>
+        </div>
+        <div class="cert-year" contenteditable="false">2022</div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setCertUrl(this)">🔗</button></div>
+      </div>
+      </a>
+    </div>
+    <button class="add-btn" onclick="addCert()"><i class="ti ti-plus"></i> Add Certification</button>
+  </div>
+
+  <!-- ECC SUPPORT -->
+  <div class="section" id="section-ecc">
+    <div class="sec-head"><i class="ti ti-headset"></i><span class="sec-title">ECC Support & Operations</span></div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px;" contenteditable="false" id="ecc-desc">Ongoing support and administration across SAP ECC landscapes — ensuring high availability, performance, and user satisfaction.</div>
+    <div class="tag-row" id="ecc-tags">
+      <span class="tag highlight editable-row">Incident Management<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      <span class="tag highlight editable-row">System Monitoring<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      <span class="tag editable-row">Performance Tuning<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      <span class="tag editable-row">Kernel Upgrades<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      <span class="tag editable-row">Support Package Application<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      <span class="tag editable-row">User Authorization<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      <span class="tag editable-row">Background Jobs<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      <span class="tag editable-row">Spool Administration<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      <span class="tag editable-row">DB Administration<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      <span class="tag editable-row">System Copy<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+      <span class="tag editable-row">Client Administration<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div></span>
+    </div>
+    <button class="add-btn" onclick="addECCTag()"><i class="ti ti-plus"></i> Add Tag</button>
+  </div>
+
+  <div class="footer">
+    <span contenteditable="false" id="footer-text"><strong>SAP BASIS Consultant</strong> &nbsp;·&nbsp; Available for new opportunities &nbsp;·&nbsp; India</span>
+  </div>
+
+</div><!-- end .port -->
+
+<script>
+// ========================
+// SUPABASE SETUP
+// ========================
+const SUPABASE_URL_KEY = 'https://bvxcbpklzansidsjxgnq.supabase.co';
+const SUPABASE_KEY_KEY = 'sb_publishable_QV35tJhuui7VVCZDor0Kxg_2_VwZwxr';
+const DATA_ROW_ID = 'main';
+let supabaseClient = null;
+
+function initSupabase(url, key) {
+  if (!url || !key) return false;
+  try {
+    supabaseClient = window.supabase.createClient(url, key);
+    return true;
+  } catch(e) { return false; }
+}
+
+function getSavedCreds() {
+  return {
+    url: localStorage.getItem(SUPABASE_URL_KEY) || '',
+    key: localStorage.getItem(SUPABASE_KEY_KEY) || ''
+  };
+}
+
+function openCfgPanel() {
+  const {url, key} = getSavedCreds();
+  document.getElementById('cfg-url').value = url;
+  document.getElementById('cfg-key').value = key;
+  document.getElementById('supabase-cfg').classList.add('open');
+}
+
+document.getElementById('cfg-save').onclick = async function() {
+  const url = document.getElementById('cfg-url').value.trim();
+  const key = document.getElementById('cfg-key').value.trim();
+  if (!url || !key) { alert('Please enter both URL and key.'); return; }
+  localStorage.setItem(SUPABASE_URL_KEY, url);
+  localStorage.setItem(SUPABASE_KEY_KEY, key);
+  const ok = initSupabase(url, key);
+  if (ok) {
+    document.getElementById('supabase-cfg').classList.remove('open');
+    document.getElementById('tb-status').textContent = '● Connected';
+    document.getElementById('tb-status').style.color = '#4ade80';
+    showSaveStatus('✓ Supabase connected', true);
+  } else {
+    alert('Failed to connect. Check your credentials.');
+  }
+};
+
+document.getElementById('cfg-skip').onclick = function() {
+  document.getElementById('supabase-cfg').classList.remove('open');
+};
+
+// ========================
+// EDIT MODE DETECTION
+// ========================
+const IS_EDIT = new URLSearchParams(window.location.search).get('edit') === 'Iampaneeeee';
+
+window.addEventListener('DOMContentLoaded', async () => {
+  const {url, key} = getSavedCreds();
+  if (url && key) initSupabase(url, key);
+
+  // Load data from Supabase for all visitors
+  await loadData();
+
+  if (IS_EDIT) {
+    activateEditMode();
+  }
+});
+
+function activateEditMode() {
+  document.body.classList.add('edit-mode');
+  document.getElementById('edit-toolbar').style.display = 'flex';
+  // Make all contenteditable="false" → "true"
+  document.querySelectorAll('[contenteditable="false"]').forEach(el => {
+    el.setAttribute('contenteditable', 'true');
+  });
+  // Check supabase
+  const {url, key} = getSavedCreds();
+  if (!url || !key) {
+    setTimeout(openCfgPanel, 500);
+    document.getElementById('tb-status').textContent = '○ Not connected';
+    document.getElementById('tb-status').style.color = '#fbbf24';
+  } else {
+    document.getElementById('tb-status').textContent = '● Connected';
+    document.getElementById('tb-status').style.color = '#4ade80';
+  }
+}
+
+// ========================
+// SAVE / LOAD
+// ========================
+async function saveAll() {
+  if (!supabaseClient) {
+    showSaveStatus('✗ Not connected to Supabase', false);
+    openCfgPanel();
+    return;
+  }
+  const html = document.getElementById('main-port').innerHTML;
+  try {
+    const {error} = await supabaseClient.from('portfolio_data').upsert({
+      id: DATA_ROW_ID,
+      data: {html},
+      updated_at: new Date().toISOString()
+    });
+    if (error) throw error;
+    showSaveStatus('✓ Saved & published', true);
+  } catch(e) {
+    showSaveStatus('✗ Save failed: ' + e.message, false);
+  }
+}
+
+async function loadData() {
+  if (!supabaseClient) return;
+  try {
+    const {data, error} = await supabaseClient
+      .from('portfolio_data')
+      .select('data')
+      .eq('id', DATA_ROW_ID)
+      .single();
+    if (error || !data) return;
+    if (data.data && data.data.html) {
+      document.getElementById('main-port').innerHTML = data.data.html;
+      // Re-attach edit controls if in edit mode
+      if (IS_EDIT) {
+        document.querySelectorAll('[contenteditable="false"]').forEach(el => {
+          el.setAttribute('contenteditable', 'true');
+        });
+      }
+    }
+  } catch(e) { /* silent fail — use default HTML */ }
+}
+
+function showSaveStatus(msg, ok) {
+  const el = document.getElementById('save-status');
+  el.textContent = msg;
+  el.className = 'show ' + (ok ? 'ok' : 'err');
+  setTimeout(() => el.className = '', 3500);
+}
+
+// ========================
+// GENERIC ROW CONTROLS
+// ========================
+function delRow(btn) {
+  if (!confirm('Remove this item?')) return;
+  const row = btn.closest('.editable-row');
+  // If wrapped in a cert-link anchor, remove the wrapper too
+  const parent = row.parentElement;
+  if (parent && parent.classList.contains('cert-link')) {
+    parent.remove();
+  } else {
+    row.remove();
+  }
+}
+
+function dupRow(btn) {
+  const row = btn.closest('.editable-row');
+  const clone = row.cloneNode(true);
+  row.parentNode.insertBefore(clone, row.nextSibling);
+}
+
+// ========================
+// CHIP (contact)
+// ========================
+function addChip() {
+  openModal('Add Contact', [
+    {id:'chip-icon', label:'Tabler Icon class (e.g. ti-mail)', type:'text', placeholder:'ti-mail'},
+    {id:'chip-text', label:'Text', type:'text', placeholder:'your@email.com'}
+  ], () => {
+    const icon = document.getElementById('chip-icon').value.trim() || 'ti-link';
+    const text = document.getElementById('chip-text').value.trim();
+    if (!text) return;
+    const el = document.createElement('span');
+    el.className = 'chip';
+    el.innerHTML = `<i class="ti ${icon}"></i> <span contenteditable="${IS_EDIT?'true':'false'}">${text}</span>`;
+    document.getElementById('hero-contacts').appendChild(el);
+  });
+}
+
+// ========================
+// STATS
+// ========================
+function addStat() {
+  openModal('Add Stat', [
+    {id:'stat-num', label:'Number', type:'text', placeholder:'5+'},
+    {id:'stat-label', label:'Label', type:'text', placeholder:'Projects'},
+    {id:'stat-accent', label:'Accent color?', type:'select', options:['No','Yes']}
+  ], () => {
+    const num = document.getElementById('stat-num').value.trim();
+    const lbl = document.getElementById('stat-label').value.trim();
+    const accent = document.getElementById('stat-accent').value === 'Yes';
+    if (!num || !lbl) return;
+    const el = document.createElement('div');
+    el.className = 'stat-card';
+    el.innerHTML = `<div class="stat-num${accent?' stat-accent':''}" contenteditable="${IS_EDIT?'true':'false'}">${num}</div><div class="stat-label" contenteditable="${IS_EDIT?'true':'false'}">${lbl}</div>`;
+    document.getElementById('stats-row').appendChild(el);
+  });
+}
+
+// ========================
+// SKILL ITEMS
+// ========================
+function addSkillItem(group) {
+  if (!group) return;
+  openModal('Add Skill', [
+    {id:'skill-name', label:'Skill Name', type:'text', placeholder:'SAP Solution Manager'}
+  ], () => {
+    const name = document.getElementById('skill-name').value.trim();
+    if (!name) return;
+    const el = document.createElement('div');
+    el.className = 'skill-item editable-row';
+    el.innerHTML = `<i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="${IS_EDIT?'true':'false'}">${name}</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div>`;
+    // Insert before the add-btn
+    const addBtn = group.querySelector('.add-btn');
+    group.insertBefore(el, addBtn);
+  });
+}
+
+function addSkillGroup() {
+  openModal('Add Skill Group', [
+    {id:'grp-title', label:'Group Title', type:'text', placeholder:'DevOps & Automation'}
+  ], () => {
+    const title = document.getElementById('grp-title').value.trim();
+    if (!title) return;
+    const el = document.createElement('div');
+    el.className = 'skill-group';
+    el.innerHTML = `<h4 contenteditable="${IS_EDIT?'true':'false'}">${title}</h4><button class="add-btn" onclick="addSkillItem(this.closest('.skill-group'))"><i class="ti ti-plus"></i> Add Skill</button>`;
+    document.getElementById('skills-grid').appendChild(el);
+  });
+}
+
+function addExtraTag() {
+  openModal('Add Expertise Tag', [
+    {id:'etag-name', label:'Tag Name', type:'text', placeholder:'ABAP Workbench'},
+    {id:'etag-hl', label:'Highlight (red)?', type:'select', options:['No','Yes']}
+  ], () => {
+    const name = document.getElementById('etag-name').value.trim();
+    const hl = document.getElementById('etag-hl').value === 'Yes';
+    if (!name) return;
+    const el = document.createElement('span');
+    el.className = 'tag editable-row' + (hl ? ' highlight' : '');
+    el.innerHTML = `${name}<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div>`;
+    document.getElementById('extra-tags').appendChild(el);
+  });
+}
+
+// ========================
+// EXPERIENCE
+// ========================
+function addExpTag(tagsEl) {
+  openModal('Add Tag', [
+    {id:'etag', label:'Tag Text', type:'text', placeholder:'SAP BTP'}
+  ], () => {
+    const v = document.getElementById('etag').value.trim();
+    if (!v) return;
+    const el = document.createElement('span');
+    el.className = 'exp-tag editable-row';
+    el.innerHTML = `${v}<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div>`;
+    tagsEl.appendChild(el);
+  });
+}
+
+function addExpItem() {
+  openModal('Add Experience', [
+    {id:'exp-date', label:'Date Range', type:'text', placeholder:'2023 – Present'},
+    {id:'exp-title', label:'Title', type:'text', placeholder:'SAP BASIS Consultant'},
+    {id:'exp-company', label:'Company & Type', type:'text', placeholder:'Company Name · Full-Time'},
+    {id:'exp-desc', label:'Description', type:'textarea', placeholder:'Describe your role...'}
+  ], () => {
+    const date = document.getElementById('exp-date').value.trim();
+    const title = document.getElementById('exp-title').value.trim();
+    const company = document.getElementById('exp-company').value.trim();
+    const desc = document.getElementById('exp-desc').value.trim();
+    if (!title) return;
+    const ce = IS_EDIT ? 'true' : 'false';
+    const list = document.getElementById('exp-list');
+    const idx = list.children.length;
+    const el = document.createElement('div');
+    el.className = 'exp-item';
+    el.id = 'exp-' + idx;
+    el.innerHTML = `
+      <div class="exp-dot-col"><div class="exp-dot" style="background:#ccc;"></div><div class="exp-line"></div></div>
+      <div class="exp-body" style="flex:1;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+          <div style="flex:1;">
+            <div class="exp-date" contenteditable="${ce}">${date}</div>
+            <div class="exp-title" contenteditable="${ce}">${title}</div>
+            <div class="exp-company" contenteditable="${ce}">${company}</div>
+            <div class="exp-desc" style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6;" contenteditable="${ce}">${desc}</div>
+            <div class="exp-tags"></div>
+            <button class="add-btn" onclick="addExpTag(this.closest('.exp-body').querySelector('.exp-tags'))"><i class="ti ti-plus"></i> Add Tag</button>
+          </div>
+          <div class="item-controls" style="margin-top:2px;">
+            <button class="ic-btn dup" title="Duplicate" onclick="dupExpItem(this)">⧉</button>
+            <button class="ic-btn del" title="Delete" onclick="delExpItem(this)">✕</button>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+function dupExpItem(btn) {
+  const item = btn.closest('.exp-item');
+  const clone = item.cloneNode(true);
+  item.parentNode.insertBefore(clone, item.nextSibling);
+}
+
+function delExpItem(btn) {
+  if (!confirm('Remove this experience?')) return;
+  btn.closest('.exp-item').remove();
+}
+
+// ========================
+// INTEGRATIONS
+// ========================
+function addIntegration() {
+  openModal('Add Integration', [
+    {id:'int-icon', label:'Tabler Icon class (e.g. ti-plug)', type:'text', placeholder:'ti-plug'},
+    {id:'int-name', label:'Integration Name', type:'text', placeholder:'SAP × Service'}
+  ], () => {
+    const icon = document.getElementById('int-icon').value.trim() || 'ti-plug';
+    const name = document.getElementById('int-name').value.trim();
+    if (!name) return;
+    const el = document.createElement('div');
+    el.className = 'int-item editable-row has-link';
+    el.dataset.url = '';
+    el.setAttribute('onclick','intItemClick(this)');
+    el.innerHTML = `<i class="ti ${icon}"></i><div class="int-name" contenteditable="${IS_EDIT?'true':'false'}">${name}</div><div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>`;
+    document.getElementById('int-grid').appendChild(el);
+  });
+}
+
+// ========================
+// PROJECTS
+// ========================
+function addProject() {
+  openModal('Add Project', [
+    {id:'proj-name', label:'Project Name', type:'text', placeholder:'S/4HANA Implementation'},
+    {id:'proj-badge', label:'Badge Text', type:'text', placeholder:'Implementation'},
+    {id:'proj-badge-type', label:'Badge Type', type:'select', options:['Implementation (green)','Integration (blue)','Cloud (red)']},
+    {id:'proj-desc', label:'Description', type:'textarea', placeholder:'Project description...'},
+    {id:'proj-hl', label:'Highlight text (optional)', type:'text', placeholder:'₹70.5 Lakh savings'}
+  ], () => {
+    const name = document.getElementById('proj-name').value.trim();
+    const badge = document.getElementById('proj-badge').value.trim();
+    const type = document.getElementById('proj-badge-type').value;
+    const desc = document.getElementById('proj-desc').value.trim();
+    const hl = document.getElementById('proj-hl').value.trim();
+    if (!name) return;
+    const badgeClass = type.includes('green') ? 'badge-impl' : type.includes('blue') ? 'badge-int' : 'badge-cloud';
+    const ce = IS_EDIT ? 'true' : 'false';
+    const el = document.createElement('div');
+    el.className = 'proj-card editable-row';
+    el.innerHTML = `
+      <div class="proj-top">
+        <div class="proj-name" contenteditable="${ce}">${name}</div>
+        <span class="proj-badge ${badgeClass}" contenteditable="${ce}">${badge}</span>
+      </div>
+      <div class="proj-desc" contenteditable="${ce}">${desc}</div>
+      ${hl ? `<div class="proj-highlight" contenteditable="${ce}">${hl}</div>` : ''}
+      <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>`;
+    document.getElementById('proj-grid').appendChild(el);
+  });
+}
+
+// ========================
+// CERTIFICATIONS
+// ========================
+function addCert() {
+  openModal('Add Certification', [
+    {id:'cert-icon-class', label:'Icon class (e.g. ti-certificate)', type:'text', placeholder:'ti-certificate'},
+    {id:'cert-name', label:'Certification Name', type:'text', placeholder:'AZ-900'},
+    {id:'cert-sub', label:'Issuer / Subtitle', type:'text', placeholder:'Microsoft Azure'},
+    {id:'cert-year', label:'Year', type:'text', placeholder:'2025'}
+  ], () => {
+    const iconCls = document.getElementById('cert-icon-class').value.trim() || 'ti-certificate';
+    const name = document.getElementById('cert-name').value.trim();
+    const sub = document.getElementById('cert-sub').value.trim();
+    const year = document.getElementById('cert-year').value.trim();
+    if (!name) return;
+    const ce = IS_EDIT ? 'true' : 'false';
+    const wrapper = document.createElement('a');
+    wrapper.className = 'cert-link';
+    wrapper.href = 'javascript:void(0)';
+    wrapper.dataset.certUrl = '';
+    wrapper.target = '_blank';
+    wrapper.rel = 'noopener';
+    wrapper.setAttribute('onclick','certLinkClick(event,this)');
+    const el = document.createElement('div');
+    el.className = 'cert-item editable-row';
+    el.innerHTML = `
+      <div class="cert-icon"><i class="ti ${iconCls}"></i></div>
+      <div>
+        <div class="cert-name" contenteditable="${ce}">${name}</div>
+        <div class="cert-sub" contenteditable="${ce}">${sub}</div>
+      </div>
+      <div class="cert-year" contenteditable="${ce}">${year}</div>
+      <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setCertUrl(this)">🔗</button></div>`;
+    wrapper.appendChild(el);
+    document.getElementById('cert-list').appendChild(wrapper);
+  });
+}
+
+// ========================
+// ECC TAGS
+// ========================
+function addECCTag() {
+  openModal('Add ECC Tag', [
+    {id:'ecc-tag', label:'Tag Name', type:'text', placeholder:'SAP GRC'},
+    {id:'ecc-hl', label:'Highlight (red)?', type:'select', options:['No','Yes']}
+  ], () => {
+    const v = document.getElementById('ecc-tag').value.trim();
+    const hl = document.getElementById('ecc-hl').value === 'Yes';
+    if (!v) return;
+    const el = document.createElement('span');
+    el.className = 'tag editable-row' + (hl ? ' highlight' : '');
+    el.innerHTML = `${v}<div class="row-actions"><button class="ic-btn del" onclick="delRow(this)">✕</button></div>`;
+    document.getElementById('ecc-tags').appendChild(el);
+  });
+}
+
+// ========================
+// MODAL HELPER
+// ========================
+let _modalCallback = null;
+
+function openModal(title, fields, onConfirm) {
+  document.getElementById('modal-title').textContent = title;
+  const container = document.getElementById('modal-fields');
+  container.innerHTML = '';
+  fields.forEach(f => {
+    const lbl = document.createElement('label');
+    lbl.textContent = f.label;
+    container.appendChild(lbl);
+    if (f.type === 'textarea') {
+      const ta = document.createElement('textarea');
+      ta.id = f.id;
+      ta.placeholder = f.placeholder || '';
+      container.appendChild(ta);
+    } else if (f.type === 'select') {
+      const sel = document.createElement('select');
+      sel.id = f.id;
+      (f.options || []).forEach(opt => {
+        const o = document.createElement('option');
+        o.value = opt; o.textContent = opt;
+        sel.appendChild(o);
+      });
+      container.appendChild(sel);
+    } else {
+      const inp = document.createElement('input');
+      inp.id = f.id;
+      inp.type = f.type || 'text';
+      inp.placeholder = f.placeholder || '';
+      container.appendChild(inp);
+    }
+  });
+  _modalCallback = onConfirm;
+  document.getElementById('modal-bg').classList.add('open');
+  // focus first input
+  setTimeout(() => {
+    const first = container.querySelector('input,textarea');
+    if (first) first.focus();
+  }, 100);
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+  _modalCallback = null;
+}
+
+function confirmModal() {
+  if (_modalCallback) _modalCallback();
+  closeModal();
+}
+
+// Close modal on backdrop click
+document.getElementById('modal-bg').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ========================
+// PREVENT ENTER = new block in contenteditable
+// ========================
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.target.hasAttribute('contenteditable') && e.target.getAttribute('contenteditable') === 'true') {
+    const tag = e.target.tagName;
+    // Allow multiline in exp-desc
+    if (e.target.classList.contains('exp-desc')) return;
+    e.preventDefault();
+    e.target.blur();
+  }
+  // Cmd/Ctrl+S to save
+  if ((e.ctrlKey || e.metaKey) && e.key === 's' && IS_EDIT) {
+    e.preventDefault();
+    saveAll();
+  }
+});
+
+// ========================
+// AVATAR / PICTURE UPLOAD
+// ========================
+document.getElementById('hero-avatar').addEventListener('click', function() {
+  if (!IS_EDIT) return;
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const av = document.getElementById('hero-avatar');
+      av.style.backgroundImage = "url('" + ev.target.result + "')";
+      av.style.backgroundSize = 'cover';
+      av.style.backgroundPosition = 'center';
+      av.style.fontSize = '0';
+      av.dataset.imgSrc = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+});
+
+// ========================
+// CHIP LINK EDITING (email / phone / linkedin)
+// ========================
+function editChipUrl(linkEl) {
+  const type = linkEl.dataset.chipType;
+  let label = 'URL', placeholder = 'https://...';
+  if (type === 'email') { label = 'Email address'; placeholder = 'you@example.com'; }
+  else if (type === 'phone') { label = 'Phone number'; placeholder = '+91XXXXXXXXXX'; }
+  else if (type === 'linkedin') { label = 'LinkedIn URL'; placeholder = 'https://linkedin.com/in/yourprofile'; }
+  openModal('Set ' + label, [
+    {id:'chip-url-val', label: label, type:'text', placeholder}
+  ], () => {
+    let val = document.getElementById('chip-url-val').value.trim();
+    if (!val) return;
+    if (type === 'email' && !val.startsWith('mailto:')) val = 'mailto:' + val;
+    else if (type === 'phone' && !val.startsWith('tel:')) val = 'tel:' + val.replace(/\s/g,'');
+    linkEl.href = val;
+  });
+}
+
+// In edit mode, clicking a chip-link opens URL editor instead of following link
+document.addEventListener('click', function(e) {
+  if (!IS_EDIT) return;
+  const link = e.target.closest('.chip-link');
+  if (link) { e.preventDefault(); editChipUrl(link); }
+});
+
+// ========================
+// INTEGRATION TILE — open URL in view / set URL in edit
+// ========================
+function intItemClick(el) {
+  if (IS_EDIT) {
+    openModal('Set Integration URL', [
+      {id:'int-url-val', label:'URL (leave blank to remove)', type:'text', placeholder:'https://...'}
+    ], () => {
+      const val = document.getElementById('int-url-val').value.trim();
+      el.dataset.url = val;
+      el.classList.toggle('has-link', !!val);
+    });
+    return;
+  }
+  const url = el.dataset.url;
+  if (url) window.open(url, '_blank', 'noopener');
+}
+
+function setIntUrl(btn) {
+  const tile = btn.closest('.int-item');
+  openModal('Set Integration URL', [
+    {id:'int-url-val', label:'URL (leave blank to remove)', type:'text', placeholder:'https://...'}
+  ], () => {
+    const val = document.getElementById('int-url-val').value.trim();
+    tile.dataset.url = val;
+    tile.classList.toggle('has-link', !!val);
+  });
+}
+
+// ========================
+// CERT LINK — open URL in view / set URL in edit
+// ========================
+function certLinkClick(e, linkEl) {
+  if (IS_EDIT) {
+    e.preventDefault();
+    openModal('Set Certification URL', [
+      {id:'cert-url-val', label:'Certification URL', type:'text', placeholder:'https://learn.microsoft.com/...'}
+    ], () => {
+      const val = document.getElementById('cert-url-val').value.trim();
+      linkEl.href = val || 'javascript:void(0)';
+      linkEl.dataset.certUrl = val;
+    });
+    return;
+  }
+  const url = linkEl.dataset.certUrl || linkEl.getAttribute('href');
+  if (!url || url === 'javascript:void(0)' || url === '') { e.preventDefault(); }
+}
+
+function setCertUrl(btn) {
+  const certItem = btn ? btn.closest('.cert-item') : null;
+  const linkEl = certItem ? certItem.closest('.cert-link') : null;
+  if (!certItem || !linkEl) return;
+  openModal('Set Certification URL', [
+    {id:'cert-url-val', label:'Certification URL', type:'text', placeholder:'https://learn.microsoft.com/...'}
+  ], () => {
+    const val = document.getElementById('cert-url-val').value.trim();
+    linkEl.href = val || 'javascript:void(0)';
+    linkEl.dataset.certUrl = val;
+  });
+}
+
+</script>
+</body>
+</html>
