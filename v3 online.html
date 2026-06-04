@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAP BASIS Consultant — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{--accent:#1a1a2e;--accent2:#e94560;--soft:#f5f5f0;--border:rgba(0,0,0,0.09);--text:#1a1a1a;--muted:#666;--card:#fff;}
+  body{font-family:'DM Sans',sans-serif;background:var(--soft);color:var(--text);line-height:1.6;padding:2rem 1rem;}
+  .port{max-width:900px;margin:0 auto;}
+  .hero{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;padding:2.5rem;background:var(--card);border-radius:20px;border:0.5px solid var(--border);margin-bottom:1.5rem;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:var(--accent2);opacity:0.06;border-radius:50%;}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;background:#f0f7ff;color:#1a5cb5;font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;margin-bottom:12px;border:0.5px solid #c8dfff;}
+  .hero h1{font-family:'DM Serif Display',serif;font-size:2.4rem;font-weight:400;line-height:1.1;margin-bottom:6px;}
+  .hero h1 span{color:var(--accent2);font-style:italic;}
+  .hero-role{font-size:1rem;color:var(--muted);margin-bottom:16px;}
+  .hero-contacts{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:5px 10px;border-radius:8px;border:0.5px solid var(--border);color:var(--muted);background:var(--soft);}
+  .avatar-wrap{text-align:center;}
+  .avatar{width:120px;height:120px;border-radius:16px;background:linear-gradient(135deg,#e8edf5,#c8d4e8);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:2.5rem;color:#4a6fa5;border:2px solid var(--border);}
+  .avail-dot{display:inline-block;width:10px;height:10px;background:#22c55e;border-radius:50;margin-right:4px;}
+  .avail-label{font-size:11px;color:#22c55e;margin-top:6px;font-weight:500;}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem;}
+  .stat-card{background:var(--card);border-radius:14px;border:0.5px solid var(--border);padding:1rem 1.2rem;text-align:center;}
+  .stat-num{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--accent);line-height:1;}
+  .stat-label{font-size:11px;color:var(--muted);margin-top:4px;}
+  .stat-accent{color:var(--accent2);}
+  .section{background:var(--card);border-radius:16px;border:0.5px solid var(--border);padding:1.5rem;margin-bottom:1.5rem;}
+  .sec-head{display:flex;align-items:center;gap:8px;margin-bottom:1.2rem;}
+  .sec-head i{font-size:18px;color:var(--accent2);}
+  .sec-title{font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+  
+  /* Skills layout without bars */
+  .skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;}
+  .skill-group h4{font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+  .skill-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px;font-weight:500;color:var(--text);}
+  .skill-item i{font-size:14px;color:var(--accent2);opacity:0.8;}
+  
+  .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+  .tag{font-size:11px;padding:3px 10px;border-radius:6px;border:0.5px solid var(--border);color:var(--muted);background:var(--soft);}
+  .tag.highlight{background:#fff5f5;color:#b91c1c;border-color:#fecaca;}
+  .exp-item{display:grid;grid-template-columns:auto 1fr;gap:0 1rem;padding-bottom:1.5rem;position:relative;}
+  .exp-item:last-child{padding-bottom:0;}
+  .exp-item:last-child .exp-line{display:none;}
+  .exp-dot-col{display:flex;flex-direction:column;align-items:center;}
+  .exp-dot{width:10px;height:10px;border-radius:50%;background:var(--accent2);margin-top:4px;flex-shrink:0;}
+  .exp-line{width:1px;flex:1;background:var(--border);margin:4px 0;}
+  .exp-date{font-size:11px;color:var(--muted);margin-bottom:2px;}
+  .exp-title{font-size:14px;font-weight:600;margin-bottom:1px;}
+  .exp-company{font-size:12px;color:var(--muted);}
+  .exp-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+  .exp-tag{font-size:10px;padding:2px 8px;border-radius:5px;background:var(--soft);color:var(--muted);border:0.5px solid var(--border);}
+  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .proj-card{border-radius:12px;border:0.5px solid var(--border);padding:1rem;background:var(--soft);position:relative;}
+  .proj-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px;}
+  .proj-name{font-size:13px;font-weight:600;line-height:1.3;}
+  .proj-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap;flex-shrink:0;}
+  .badge-impl{background:#e8f5e9;color:#2e7d32;}
+  .badge-int{background:#e3f2fd;color:#1565c0;}
+  .badge-cloud{background:#fce4ec;color:#c62828;}
+  .proj-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+  .proj-highlight{font-size:11px;font-weight:600;color:var(--accent2);margin-top:6px;}
+  .cert-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--border);position:relative;}
+  .cert-item:last-child{border-bottom:none;}
+  .cert-icon{width:36px;height:36px;border-radius:8px;background:#fff5e6;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .cert-icon i{font-size:18px;color:#e65100;}
+  .cert-name{font-size:13px;font-weight:500;}
+  .cert-sub{font-size:11px;color:var(--muted);}
+  .cert-year{font-size:12px;font-weight:600;color:var(--accent2);margin-left:auto;margin-right: 10px;}
+  .int-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .int-item{text-align:center;padding:14px 8px;border-radius:12px;background:var(--soft);border:0.5px solid var(--border);position:relative;}
+  .int-item i{font-size:22px;color:var(--accent2);display:block;margin-bottom:6px;}
+  .int-name{font-size:11px;font-weight:500;line-height:1.3;}
+  
+  /* Banners Container styles */
+  .banners-row{display:flex;gap:1rem;margin-bottom:1.5rem;}
+  .savings-banner{flex:1;background:var(--accent);border-radius:14px;padding:1.2rem 1.5rem;display:flex;flex-direction:column;justify-content:between;}
+  .savings-banner.fue-banner{background:linear-gradient(135deg, #1f1f3a, #121222);border-left:4px solid var(--accent2);}
+  .savings-left{color:#fff;margin-bottom:1rem;}
+  .savings-title{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;margin-bottom:4px;}
+  .savings-amount{font-family:'DM Serif Display',serif;font-size:2.2rem;color:#fff;line-height:1;}
+  .savings-sub{font-size:11px;opacity:0.6;margin-top:4px;}
+  .savings-right{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-top:1px solid rgba(255,255,255,0.1);padding-top:0.8rem;}
+  .savings-stat{color:#fff;font-size:10px;opacity:0.8;line-height:1.3;}
+  .savings-stat strong{display:block;font-size:13px;opacity:1;color:#fff;}
+  .fue-accent{color:var(--accent2) !important;}
+  
+  .footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--muted);}
+  @media print{body{background:#fff;}@page{margin:1cm;}}
+  @media(max-width:768px){
+    .banners-row{flex-direction:column;}
+  }
+  @media(max-width:600px){
+    .hero{grid-template-columns:1fr;}.avatar-wrap{display:none;}
+    .stats-row{grid-template-columns:repeat(2,1fr);}
+    .skills-grid{grid-template-columns:1fr;}
+    .proj-grid{grid-template-columns:1fr;}
+    .int-grid{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+<div class="port">
+  <div class="hero">
+    <div>
+      <div class="hero-badge"><i class="ti ti-building"></i> Open to Opportunities</div>
+      <h1>SAP <span>Basis</span><br>Consultant</h1>
+      <div class="hero-role">SAP BASIS · SAP Fiori · SAP BTP · Azure Cloud · S/4HANA</div>
+      <div class="hero-contacts">
+        <span class="chip"><i class="ti ti-mail"></i> your.email@domain.com</span>
+        <span class="chip"><i class="ti ti-phone"></i> +91 XXXXX XXXXX</span>
+        <span class="chip"><i class="ti ti-map-pin"></i> India</span>
+        <span class="chip"><i class="ti ti-brand-linkedin"></i> LinkedIn Profile</span>
+      </div>
+    </div>
+    <div class="avatar-wrap">
+      <div class="avatar">YN</div>
+      <div class="avail-label"><span class="avail-dot"></span>Available</div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num">4+</div><div class="stat-label">Years Experience</div></div>
+    <div class="stat-card"><div class="stat-num stat-accent">9+</div><div class="stat-label">Major Integrations</div></div>
+    <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">S/4HANA Projects</div></div>
+    <div class="stat-card"><div class="stat-num stat-accent">1</div><div class="stat-label">Azure Certification</div></div>
+  </div>
+
+  <div class="banners-row">
+    <div class="savings-banner">
+      <div class="savings-left">
+        <div class="savings-title">Cloud Cost Optimization Achievement</div>
+        <div class="savings-amount">₹70.5 Lakhs</div>
+        <div class="savings-sub">Total savings delivered through Azure cloud landscape optimization</div>
+      </div>
+      <div class="savings-right">
+        <div class="savings-stat"><strong>Auto Start/Stop</strong>VM policies run</div>
+        <div class="savings-stat"><strong>100% VMs</strong>Backup coverage</div>
+        <div class="savings-stat"><strong>ZTNA</strong>PIP routing secure</div>
+      </div>
+    </div>
+
+    <div class="savings-banner fue-banner">
+      <div class="savings-left">
+        <div class="savings-title">SAP FUE License Optimisation</div>
+        <div class="savings-amount">110+ FUEs <span style="font-size:1.2rem; font-family:'DM Sans', sans-serif; font-weight:400; opacity:0.8;">Saved</span></div>
+        <div class="savings-sub">Optimized complex roles mapping to pull matrix back under structural compliance</div>
+      </div>
+      <div class="savings-right">
+        <div class="savings-stat"><strong class="fue-accent">180+ → 70</strong>FUE limit brought down</div>
+        <div class="savings-stat"><strong>350+</strong>Users streamlined</div>
+        <div class="savings-stat"><strong>3,000+</strong>Roles analyzed</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><i class="ti ti-code"></i><span class="sec-title">Technical Skills</span></div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h4>SAP Core</h4>
+        <div class="skill-item"><i class="ti ti-circle-check"></i><span class="skill-name">SAP BASIS Administration</span></div>
+        <div class="skill-item"><i class="ti ti-circle-check"></i><span class="skill-name">SAP S/4HANA</span></div>
+        <div class="skill-item"><i class="ti ti-circle-check"></i><span class="skill-name">SAP Fiori</span></div>
+        <div class="skill-item"><i class="ti ti-circle-check"></i><span class="skill-name">SAP BTP</span></div>
+        <div class="skill-item"><i class="ti ti-circle-check"></i><span class="skill-name">SAP ECC</span></div>
+      </div>
+      <div class="skill-group">
+        <h4>Cloud & Infrastructure</h4>
+        <div class="skill-item"><i class="ti ti-circle-check"></i><span class="skill-name">Microsoft Azure</span></div>
+        <div class="skill-item"><i class="ti ti-circle-check"></i><span class="skill-name">SAP Mobile Start</span></div>
+        <div class="skill-item"><i class="ti ti-circle-check"></i><span class="skill-name">SSO Integration</span></div>
+        <div class="skill-item"><i class="ti ti-circle-check"></i><span class="skill-name">Azure DevOps</span></div>
+        <div class="skill-item"><i class="ti ti-circle-check"></i><span class="skill-name">Microsoft Fabric</span></div>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem;">
+      <h4 style="font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Additional Expertise</h4>
+      <div class="tag-row">
+        <span class="tag highlight">HANA DB Administration</span>
+        <span class="tag highlight">Transport Management</span>
+        <span class="tag">User Management</span>
+        <span class="tag">Solution Manager</span>
+        <span class="tag">STMS</span>
+        <span class="tag">System Refresh</span>
+        <span class="tag highlight">SAP Public Cloud</span>
+        <span class="tag">Kernel Upgrade</span>
+        <span class="tag">Support Packages</span>
+        <span class="tag">CCMS Monitoring</span>
+        <span class="tag highlight">Azure ZTNA</span>
+        <span class="tag">Cron Job Scheduling</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><i class="ti ti-briefcase"></i><span class="sec-title">Experience</span></div>
+    <div class="exp-container">
+      <div class="exp-item">
+        <div class="exp-dot-col"><div class="exp-dot"></div><div class="exp-line"></div></div>
+        <div>
+          <div class="exp-date">2022 – Present</div>
+          <div class="exp-title">SAP BASIS Consultant</div>
+          <div class="exp-company">Current Organization · Full-Time</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6;">Leading SAP BASIS operations across S/4HANA Private Cloud Greenfield implementation, rollout projects, and ECC support. Driving Azure cloud infrastructure, cost optimization, and critical system integrations with banking and Microsoft platforms.</div>
+          <div class="exp-tags">
+            <span class="exp-tag">S/4HANA Private Cloud</span><span class="exp-tag">Greenfield Implementation</span><span class="exp-tag">Rollout Projects</span><span class="exp-tag">ECC Support</span><span class="exp-tag">Azure Cloud</span><span class="exp-tag">SAP Fiori</span><span class="exp-tag">SAP BTP</span>
+          </div>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-dot-col"><div class="exp-dot" style="background:#ccc;"></div><div class="exp-line"></div></div>
+        <div>
+          <div class="exp-date">2020 – 2022</div>
+          <div class="exp-title">Junior SAP BASIS Administrator</div>
+          <div class="exp-company">Previous Organization · Full-Time</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6;">SAP system administration, user management, transport requests, system monitoring, and ECC landscape maintenance.</div>
+          <div class="exp-tags">
+            <span class="exp-tag">SAP ECC</span><span class="exp-tag">BASIS Admin</span><span class="exp-tag">HANA DB</span><span class="exp-tag">STMS</span>
+          </div>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-dot-col"><div class="exp-dot" style="background:#ccc;"></div></div>
+        <div>
+          <div class="exp-date">2019 – 2020</div>
+          <div class="exp-title">SAP BASIS Trainee</div>
+          <div class="exp-company">Training Organization</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;">Foundation in SAP landscape, BASIS administration, ABAP workbench, and system operations.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><i class="ti ti-plug"></i><span class="sec-title">Key Integrations Delivered</span></div>
+    <div class="int-grid">
+      <div class="int-item"><i class="ti ti-database-import"></i><div class="int-name">S/4HANA × Microsoft Fabric</div></div>
+      <div class="int-item"><i class="ti ti-shield-lock"></i><div class="int-name">SSO for SAP Fiori</div></div>
+      <div class="int-item"><i class="ti ti-device-mobile"></i><div class="int-name">SAP Mobile Start App</div></div>
+      <div class="int-item"><i class="ti ti-world"></i><div class="int-name">Fiori Public Domain Integration</div></div>
+      <div class="int-item"><i class="ti ti-building-bank"></i><div class="int-name">Banking Integration (Axis, RBL, SC)</div></div>
+      <div class="int-item"><i class="ti ti-cloud"></i><div class="int-name">Azure Advisory Implementation</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><i class="ti ti-stack-2"></i><span class="sec-title">Projects</span></div>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="proj-top"><div class="proj-name">S/4HANA Pvt Cloud Greenfield Implementation</div><span class="proj-badge badge-impl">Implementation</span></div>
+        <div class="proj-desc">End-to-end SAP S/4HANA Private Cloud Greenfield implementation. Handled BASIS setup, system landscape, transport routes, and go-live activities.</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-top"><div class="proj-name">S/4HANA Roll Out Project</div><span class="proj-badge badge-impl">Rollout</span></div>
+        <div class="proj-desc">Managed SAP system rollout across multiple business units. Coordinated transports, user provisioning, and system configuration across regions.</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-top"><div class="proj-name">Banking Integration — 3 Banks</div><span class="proj-badge badge-int">Integration</span></div>
+        <div class="proj-desc">Integrated S/4HANA with Axis Bank, RBL Bank, and Standard Chartered for automated payment processing and reconciliation workflows.</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-top"><div class="proj-name">Microsoft Fabric Integration</div><span class="proj-badge badge-int">Integration</span></div>
+        <div class="proj-desc">Architected SAP S/4HANA integration with Microsoft Fabric for real-time data analytics and enterprise reporting pipelines.</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-top"><div class="proj-name">Azure Cloud Cost Optimization</div><span class="proj-badge badge-cloud">Cloud</span></div>
+        <div class="proj-desc">Implemented VM auto start/stop policies, Azure advisor recommendations, backup policies across all VMs, and cron job scheduling for data protection.</div>
+        <div class="proj-highlight">₹70.5 Lakh savings achieved</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-top"><div class="proj-name">ZTNA Secure Network Routing</div><span class="proj-badge badge-cloud">Cloud</span></div>
+        <div class="proj-desc">Implemented PIP routing through Zero Trust Network Access (ZTNA) for secure, optimized connectivity across the SAP landscape.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="certifications-section">
+    <div class="sec-head"><i class="ti ti-certificate"></i><span class="sec-title">Certifications</span></div>
+    <div class="cert-container">
+      <div class="cert-item">
+        <div class="cert-icon"><i class="ti ti-brand-azure"></i></div>
+        <div><div class="cert-name">AZ-400 — Azure DevOps Engineer Expert</div><div class="cert-sub">Microsoft Azure Certification</div></div>
+        <div class="cert-year">2024</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon" style="background:#f0f7ff;"><i class="ti ti-building" style="color:#1565c0;"></i></div>
+        <div><div class="cert-name">SAP BASIS Administration</div><div class="cert-sub">SAP Certified Technology Associate</div></div>
+        <div class="cert-year">2022</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><i class="ti ti-headset"></i><span class="sec-title">ECC Support & Operations</span></div>
+    <div class="ecc-desc" style="font-size:13px;color:var(--muted);margin-bottom:12px;">Ongoing support and administration across SAP ECC landscapes — ensuring high availability, performance, and user satisfaction.</div>
+    <div class="tag-row">
+      <span class="tag highlight">Incident Management</span>
+      <span class="tag highlight">System Monitoring</span>
+      <span class="tag">Performance Tuning</span>
+      <span class="tag">Kernel Upgrades</span>
+      <span class="tag">Support Package Application</span>
+      <span class="tag">User Authorization</span>
+      <span class="tag">Background Jobs</span>
+      <span class="tag">Spool Administration</span>
+      <span class="tag">DB Administration</span>
+      <span class="tag">System Copy</span>
+      <span class="tag">Client Administration</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>SAP BASIS Consultant</strong> &nbsp;·&nbsp; Available for new opportunities &nbsp;·&nbsp; India
+  </div>
+</div>
+
+<script>
+  // ==========================================
+  // CONFIGURATION: ADD YOUR SUPABASE DETAILS
+  // ==========================================
+  const SUPABASE_URL = 'https://mfcbafliiglihnxcupet.supabase.co'; 
+  const SUPABASE_ANON_KEY = 'sb_publishable_X480gFLA54kYzv2ZJrJqSA_ZQnoo4xJ';
+  
+  // Initialize Supabase Client
+  const supabase = (SUPABASE_URL !== 'YOUR_SUPABASE_URL') ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+  // Detect Edit Mode parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const isEditMode = urlParams.get('edit') === 'Iampaneeeee';
+
+  // Core Selectors for editing
+  const plainTextSelectors = [
+    '.hero h1', '.hero h1 span', '.hero-role', '.avatar', '.stat-num', '.stat-label',
+    '.savings-title', '.savings-amount', '.savings-sub', '.savings-stat', '.savings-stat strong',
+    '.skill-group h4', '.skill-name', '.exp-date', '.exp-title', '.exp-company', '.exp-item div',
+    '.proj-name', '.proj-desc', '.proj-highlight', '.cert-name', '.cert-sub', '.cert-year',
+    '.int-name', '.sec-title', '.ecc-desc', '.footer strong'
+  ].join(', ');
+
+  const blockContainers = [
+    { parent: '.stats-row', item: '.stat-card', label: 'Stat Card' },
+    { parent: '.skill-group', item: '.skill-item', label: 'Skill Line' },
+    { parent: '.exp-container', item: '.exp-item', label: 'Experience' },
+    { parent: '.int-grid', item: '.int-item', label: 'Integration' },
+    { parent: '.proj-grid', item: '.proj-card', label: 'Project' },
+    { parent: '.cert-container', item: '.cert-item', label: 'Certification' }
+  ];
+
+  // Load Content from Supabase on window init
+  window.addEventListener('DOMContentLoaded', async () => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('portfolio_configs')
+          .select('html_content')
+          .eq('id', 'main_portfolio')
+          .single();
+          
+        if (data && data.html_content) {
+          document.querySelector('.port').innerHTML = data.html_content;
+        }
+      } catch (err) {
+        console.warn("Could not load layout from Supabase, operating with markup fallback.", err);
+      }
+    }
+
+    if (isEditMode) {
+      initEditDashboard();
+    }
+  });
+
+  // Setup Edit View Dashboard
+  function initEditDashboard() {
+    document.body.style.paddingTop = '70px';
+
+    // Inject Top Editing Navigation Bar
+    const controlBar = document.createElement('div');
+    controlBar.className = 'edit-control-ui';
+    controlBar.style.cssText = 'position:fixed; top:0; left:0; right:0; height:60px; background:#1a1a2e; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:0 2rem; z-index:99999; box-shadow:0 4px 20px rgba(0,0,0,0.3); font-family:sans-serif;';
+    controlBar.innerHTML = `
+      <div>⚡ <strong style="color:var(--accent2)">Edit Engine Active</strong> | Click text blocks directly to edit dashboard properties.</div>
+      <div style="display:flex; gap:10px;">
+        <button id="save-portfolio-btn" style="background:#e94560; color:#fff; border:none; padding:8px 18px; border-radius:6px; cursor:pointer; font-weight:600; font-size:13px; transition:0.2s;">Save Portfolio Layout</button>
+        <button onclick="window.location.href=window.location.origin+window.location.pathname" style="background:#333; color:#ccc; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:13px;">Exit</button>
+      </div>
+    `;
+    document.body.prepend(controlBar);
+
+    document.getElementById('save-portfolio-btn').addEventListener('click', savePortfolioToCloud);
+
+    // Initial parsing run
+    refreshEditableElements();
+  }
+
+  function refreshEditableElements() {
+    // 1. Text elements configurations
+    document.querySelectorAll(plainTextSelectors).forEach(el => {
+      if (el.children.length === 0) {
+        el.setAttribute('contenteditable', 'true');
+        el.style.outline = 'none';
+        el.addEventListener('focus', () => el.style.background = 'rgba(233,69,96,0.08)');
+        el.addEventListener('blur', () => el.style.background = 'transparent');
+      }
+    });
+
+    // 2. Mixin components inline fix (Chips containing dynamic micro text properties alongside vector shapes)
+    document.querySelectorAll('.chip, .hero-badge, .avail-label').forEach(el => {
+      for (let child of el.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE && child.textContent.trim() !== '') {
+          const wrapper = document.createElement('span');
+          wrapper.className = 'editable-subtext';
+          wrapper.setAttribute('contenteditable', 'true');
+          wrapper.style.outline = 'none';
+          wrapper.textContent = child.textContent;
+          el.replaceChild(wrapper, child);
+        }
+      }
+    });
+
+    // 3. Simple Tags management controls setup
+    document.querySelectorAll('.tag, .exp-tag').forEach(tag => {
+      if (!tag.querySelector('.tag-del-btn')) {
+        tag.setAttribute('contenteditable', 'true');
+        tag.style.outline = 'none';
+        const closeIcon = document.createElement('span');
+        closeIcon.className = 'edit-control-ui tag-del-btn';
+        closeIcon.innerHTML = ' &times;';
+        closeIcon.style.cssText = 'color:var(--accent2); cursor:pointer; margin-left:4px; font-weight:bold;';
+        closeIcon.setAttribute('contenteditable', 'false');
+        closeIcon.onclick = (e) => { e.stopPropagation(); tag.remove(); };
+        tag.appendChild(closeIcon);
+      }
+    });
+
+    // 4. Append inline Add Tools into Tag Rows
+    document.querySelectorAll('.tag-row, .exp-tags').forEach((row, i) => {
+      if (!row.id) row.id = `tag-row-target-${i}`;
+      if (!row.querySelector('.add-tag-trigger')) {
+        const addBtn = document.createElement('button');
+        addBtn.className = 'edit-control-ui add-tag-trigger';
+        addBtn.innerHTML = '+ Tag';
+        addBtn.style.cssText = 'background:#fff; color:var(--muted); border:0.5px dashed var(--accent2); font-size:10px; padding:2px 8px; border-radius:4px; cursor:pointer; margin-left:4px;';
+        addBtn.onclick = (e) => {
+          e.preventDefault();
+          const targetClass = row.classList.contains('exp-tags') ? 'exp-tag' : 'tag';
+          const newTag = document.createElement('span');
+          newTag.className = targetClass;
+          newTag.textContent = 'New Tag Entry';
+          row.insertBefore(newTag, addBtn);
+          refreshEditableElements();
+        };
+        row.appendChild(addBtn);
+      }
+    });
+
+    // 5. Grid/Row Structure Tooling bindings
+    blockContainers.forEach(conf => {
+      document.querySelectorAll(conf.parent).forEach((container, parentIdx) => {
+        if (!container.id) container.id = `container-id-${parentIdx}-${conf.label.replace(/\s+/g, '')}`;
+
+        // Inject contextual Block structural mutations toolbars
+        container.querySelectorAll(conf.item).forEach(item => {
+          if (item.querySelector('.block-actions-ui')) return;
+
+          item.style.position = 'relative';
+          const toolbar = document.createElement('div');
+          toolbar.className = 'edit-control-ui block-actions-ui';
+          toolbar.style.cssText = 'position:absolute; top:4px; right:4px; background:rgba(26,26,46,0.95); padding:2px 6px; border-radius:6px; display:inline-flex; gap:6px; z-index:99; box-shadow:0 2px 8px rgba(0,0,0,0.2); border:0.5px solid rgba(255,255,255,0.1);';
+          
+          toolbar.innerHTML = `
+            <button title="Duplicate Record" class="dup-btn" style="background:none; border:none; color:#fff; cursor:pointer; font-size:11px;">📋</button>
+            <button title="Remove Record" class="del-btn" style="background:none; border:none; color:#e94560; cursor:pointer; font-size:11px; font-weight:bold;">&times;</button>
+          `;
+
+          // Clone processing rules
+          toolbar.querySelector('.dup-btn').onclick = (e) => {
+            e.preventDefault(); e.stopPropagation();
+            const copy = item.cloneNode(true);
+            copy.querySelectorAll('.edit-control-ui').forEach(el => el.remove());
+            item.parentNode.insertBefore(copy, item.nextSibling);
+            refreshEditableElements();
+          };
+
+          // Removal execution steps
+          toolbar.querySelector('.del-btn').onclick = (e) => {
+            e.preventDefault(); e.stopPropagation();
+            item.remove();
+          };
+
+          item.appendChild(toolbar);
+        });
+
+        // Appending section Footer Append triggers
+        if (!container.querySelector(`.add-block-trigger`)) {
+          const addBlockBtn = document.createElement('button');
+          addBlockBtn.className = 'edit-control-ui add-block-trigger';
+          addBlockBtn.innerHTML = `➕ Insert New ${conf.label}`;
+          addBlockBtn.style.cssText = 'grid-column: 1 / -1; background:#fff; color:var(--text); border:1px dashed var(--accent2); padding:8px; border-radius:10px; cursor:pointer; font-size:12px; font-weight:500; margin:6px auto; display:block; width:98%; max-width:250px; text-align:center; transition:0.2s;';
+          
+          addBlockBtn.onclick = (e) => {
+            e.preventDefault();
+            const sourceTemplate = container.querySelector(conf.item);
+            if (sourceTemplate) {
+              const freshNode = sourceTemplate.cloneNode(true);
+              freshNode.querySelectorAll('.edit-control-ui').forEach(el => el.remove());
+              container.insertBefore(freshNode, addBlockBtn);
+              refreshEditableElements();
+            }
+          };
+          container.appendChild(addBlockBtn);
+        }
+      });
+    });
+  }
+
+  // Sanitize DOM & Save Changes to Cloud Table
+  async function savePortfolioToCloud() {
+    if (!supabase) {
+      alert("Error: Supabase client connection missing configuration parameters. Please check your inline credentials setup inside the code block mapping.");
+      return;
+    }
+
+    const saveBtn = document.getElementById('save-portfolio-btn');
+    saveBtn.innerText = 'Syncing...';
+    saveBtn.disabled = true;
+
+    // Create sandbox viewport mirror snapshot clone to safely strip out interface mutations
+    const mirrorClone = document.querySelector('.port').cloneNode(true);
+
+    // Scrub out all editor management infrastructure components
+    mirrorClone.querySelectorAll('.edit-control-ui').forEach(uiNode => uiNode.remove());
+
+    // Clean inline functional modifications properties back to static variables layout
+    mirrorClone.querySelectorAll('[contenteditable]').forEach(node => {
+      node.removeAttribute('contenteditable');
+      node.style.background = '';
+      node.style.outline = '';
+    });
+    
+    mirrorClone.querySelectorAll('.tag-del-btn').forEach(btn => btn.remove());
+
+    const serializedContent = mirrorClone.innerHTML;
+
+    try {
+      const { error } = await supabase
+        .from('portfolio_configs')
+        .upsert({ id: 'main_portfolio', html_content: serializedContent }, { onConflict: 'id' });
+
+      if (error) throw error;
+
+      alert('Portfolio snapshot synced to cloud successfully!');
+      // Refresh current viewing session perspective to clean dynamic render properties
+      window.location.href = window.location.origin + window.location.pathname;
+    } catch (err) {
+      console.error(err);
+      alert('Operational exception encountered syncing properties database snapshot: ' + err.message);
+      saveBtn.innerText = 'Save Portfolio Layout';
+      saveBtn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
