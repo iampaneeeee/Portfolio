@@ -148,6 +148,9 @@
   .ic-btn.del:hover{border-color:#ef4444;color:#ef4444;background:#fef2f2;}
   .ic-btn.dup:hover{border-color:#3b82f6;color:#3b82f6;background:#eff6ff;}
 
+  /* Hide ALL row-actions by default (view mode) */
+  .row-actions{display:none !important;}
+
   /* Row wrappers in edit mode */
   body.edit-mode .editable-row{
     position:relative;border-radius:8px;transition:background .15s;
@@ -155,11 +158,36 @@
   }
   body.edit-mode .editable-row:hover{background:rgba(233,69,96,0.04);}
   body.edit-mode .editable-row .row-actions{
-    display:flex;gap:3px;
+    display:flex !important;gap:3px;
     position:absolute;right:4px;top:50%;transform:translateY(-50%);
     opacity:0;transition:opacity .15s;
   }
-  body.edit-mode .editable-row:hover .row-actions{opacity:1;}
+  body.edit-mode .editable-row:hover .row-actions{opacity:1 !important;}
+
+  /* Clickable chips in view mode */
+  .chip-link{text-decoration:none;color:inherit;}
+  .chip-link .chip{cursor:pointer;transition:background .15s,border-color .15s;}
+  .chip-link .chip:hover{background:#e8edf5;border-color:#aab8d0;}
+
+  /* Clickable int-item in view mode */
+  .int-link{text-decoration:none;color:inherit;display:contents;}
+  .int-item.has-link{cursor:pointer;transition:background .15s,border-color .15s;}
+  .int-item.has-link:hover{background:#e8edf5;border-color:#aab8d0;}
+
+  /* Clickable cert-item in view mode */
+  .cert-link{text-decoration:none;color:inherit;}
+  .cert-link .cert-item{cursor:pointer;transition:background .15s;}
+  .cert-link .cert-item:hover{background:var(--soft);}
+
+  /* Avatar upload in edit mode */
+  body.edit-mode #hero-avatar{cursor:pointer;position:relative;}
+  body.edit-mode #hero-avatar::after{
+    content:'📷 Upload';position:absolute;inset:0;background:rgba(0,0,0,0.45);
+    color:#fff;font-size:11px;font-family:'DM Sans',sans-serif;font-style:normal;
+    display:flex;align-items:center;justify-content:center;border-radius:16px;
+    opacity:0;transition:opacity .2s;
+  }
+  body.edit-mode #hero-avatar:hover::after{opacity:1;}
 
   /* Add buttons */
   .add-btn{
@@ -269,10 +297,10 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
       <h1 id="hero-h1">SAP <span contenteditable="false" id="hero-h1-main">SAP</span> <span style="color:var(--accent2);font-style:italic;" contenteditable="false" id="hero-h1-accent">Basis</span><br><span contenteditable="false" id="hero-h1-sub">Consultant</span></h1>
       <div class="hero-role" contenteditable="false" id="hero-role">SAP BASIS · SAP Fiori · SAP BTP · Azure Cloud · S/4HANA</div>
       <div class="hero-contacts" id="hero-contacts">
-        <span class="chip"><i class="ti ti-mail"></i> <span contenteditable="false">your.email@domain.com</span></span>
-        <span class="chip"><i class="ti ti-phone"></i> <span contenteditable="false">+91 XXXXX XXXXX</span></span>
+        <a class="chip-link" href="mailto:your.email@domain.com" data-chip-type="email" id="chip-email-link"><span class="chip"><i class="ti ti-mail"></i> <span contenteditable="false" id="chip-email-text">your.email@domain.com</span></span></a>
+        <a class="chip-link" href="tel:+91XXXXXXXXXX" data-chip-type="phone" id="chip-phone-link"><span class="chip"><i class="ti ti-phone"></i> <span contenteditable="false" id="chip-phone-text">+91 XXXXX XXXXX</span></span></a>
         <span class="chip"><i class="ti ti-map-pin"></i> <span contenteditable="false">India</span></span>
-        <span class="chip"><i class="ti ti-brand-linkedin"></i> <span contenteditable="false">LinkedIn Profile</span></span>
+        <a class="chip-link" href="https://linkedin.com/in/yourprofile" data-chip-type="linkedin" id="chip-linkedin-link" target="_blank" rel="noopener"><span class="chip"><i class="ti ti-brand-linkedin"></i> <span contenteditable="false" id="chip-linkedin-text">LinkedIn Profile</span></span></a>
       </div>
       <button class="add-btn" onclick="addChip()"><i class="ti ti-plus"></i> Add Contact</button>
     </div>
@@ -457,35 +485,35 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
   <div class="section" id="section-int">
     <div class="sec-head"><i class="ti ti-plug"></i><span class="sec-title">Key Integrations Delivered</span></div>
     <div class="int-grid" id="int-grid">
-      <div class="int-item editable-row">
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
         <i class="ti ti-database-import"></i>
         <div class="int-name" contenteditable="false">S/4HANA × Microsoft Fabric</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
       </div>
-      <div class="int-item editable-row">
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
         <i class="ti ti-shield-lock"></i>
         <div class="int-name" contenteditable="false">SSO for SAP Fiori</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
       </div>
-      <div class="int-item editable-row">
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
         <i class="ti ti-device-mobile"></i>
         <div class="int-name" contenteditable="false">SAP Mobile Start App</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
       </div>
-      <div class="int-item editable-row">
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
         <i class="ti ti-world"></i>
         <div class="int-name" contenteditable="false">Fiori Public Domain Integration</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
       </div>
-      <div class="int-item editable-row">
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
         <i class="ti ti-building-bank"></i>
         <div class="int-name" contenteditable="false">Banking Integration (Axis, RBL, SC)</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
       </div>
-      <div class="int-item editable-row">
+      <div class="int-item editable-row has-link" data-url="" onclick="intItemClick(this)">
         <i class="ti ti-cloud"></i>
         <div class="int-name" contenteditable="false">Azure Advisory Implementation</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>
       </div>
     </div>
     <button class="add-btn" onclick="addIntegration()"><i class="ti ti-plus"></i> Add Integration</button>
@@ -501,7 +529,7 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
           <span class="proj-badge badge-impl" contenteditable="false">Implementation</span>
         </div>
         <div class="proj-desc" contenteditable="false">End-to-end SAP S/4HANA Private Cloud Greenfield implementation. Handled BASIS setup, system landscape, transport routes, and go-live activities.</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
       </div>
       <div class="proj-card editable-row">
         <div class="proj-top">
@@ -509,7 +537,7 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
           <span class="proj-badge badge-impl" contenteditable="false">Rollout</span>
         </div>
         <div class="proj-desc" contenteditable="false">Managed SAP system rollout across multiple business units. Coordinated transports, user provisioning, and system configuration across regions.</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
       </div>
       <div class="proj-card editable-row">
         <div class="proj-top">
@@ -517,7 +545,7 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
           <span class="proj-badge badge-int" contenteditable="false">Integration</span>
         </div>
         <div class="proj-desc" contenteditable="false">Integrated S/4HANA with Axis Bank, RBL Bank, and Standard Chartered for automated payment processing and reconciliation workflows.</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
       </div>
       <div class="proj-card editable-row">
         <div class="proj-top">
@@ -525,7 +553,7 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
           <span class="proj-badge badge-int" contenteditable="false">Integration</span>
         </div>
         <div class="proj-desc" contenteditable="false">Architected SAP S/4HANA integration with Microsoft Fabric for real-time data analytics and enterprise reporting pipelines.</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
       </div>
       <div class="proj-card editable-row">
         <div class="proj-top">
@@ -534,7 +562,7 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
         </div>
         <div class="proj-desc" contenteditable="false">Implemented VM auto start/stop policies, Azure advisor recommendations, backup policies across all VMs, and cron job scheduling for data protection.</div>
         <div class="proj-highlight" contenteditable="false">₹70.5 Lakh savings achieved</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
       </div>
       <div class="proj-card editable-row">
         <div class="proj-top">
@@ -542,7 +570,7 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
           <span class="proj-badge badge-cloud" contenteditable="false">Cloud</span>
         </div>
         <div class="proj-desc" contenteditable="false">Implemented PIP routing through Zero Trust Network Access (ZTNA) for secure, optimized connectivity across the SAP landscape.</div>
-        <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
       </div>
     </div>
     <button class="add-btn" onclick="addProject()"><i class="ti ti-plus"></i> Add Project</button>
@@ -552,6 +580,7 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
   <div class="section" id="section-cert">
     <div class="sec-head"><i class="ti ti-certificate"></i><span class="sec-title">Certifications</span></div>
     <div id="cert-list">
+      <a class="cert-link" href="" data-cert-url="" target="_blank" rel="noopener" id="cert-link-0" onclick="certLinkClick(event,this)">
       <div class="cert-item editable-row" id="cert-0">
         <div class="cert-icon"><i class="ti ti-brand-azure"></i></div>
         <div>
@@ -559,8 +588,10 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
           <div class="cert-sub" contenteditable="false">Microsoft Azure Certification</div>
         </div>
         <div class="cert-year" contenteditable="false">2024</div>
-        <div class="row-actions" style="position:static;transform:none;opacity:1;margin-left:8px;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setCertUrl(this)">🔗</button></div>
       </div>
+      </a>
+      <a class="cert-link" href="" data-cert-url="" target="_blank" rel="noopener" id="cert-link-1" onclick="certLinkClick(event,this)">
       <div class="cert-item editable-row" id="cert-1">
         <div class="cert-icon" style="background:#f0f7ff;"><i class="ti ti-building" style="color:#1565c0;"></i></div>
         <div>
@@ -568,8 +599,9 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
           <div class="cert-sub" contenteditable="false">SAP Certified Technology Associate</div>
         </div>
         <div class="cert-year" contenteditable="false">2022</div>
-        <div class="row-actions" style="position:static;transform:none;opacity:1;margin-left:8px;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>
+        <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setCertUrl(this)">🔗</button></div>
       </div>
+      </a>
     </div>
     <button class="add-btn" onclick="addCert()"><i class="ti ti-plus"></i> Add Certification</button>
   </div>
@@ -744,7 +776,14 @@ function showSaveStatus(msg, ok) {
 // ========================
 function delRow(btn) {
   if (!confirm('Remove this item?')) return;
-  btn.closest('.editable-row').remove();
+  const row = btn.closest('.editable-row');
+  // If wrapped in a cert-link anchor, remove the wrapper too
+  const parent = row.parentElement;
+  if (parent && parent.classList.contains('cert-link')) {
+    parent.remove();
+  } else {
+    row.remove();
+  }
 }
 
 function dupRow(btn) {
@@ -917,8 +956,10 @@ function addIntegration() {
     const name = document.getElementById('int-name').value.trim();
     if (!name) return;
     const el = document.createElement('div');
-    el.className = 'int-item editable-row';
-    el.innerHTML = `<i class="ti ${icon}"></i><div class="int-name" contenteditable="${IS_EDIT?'true':'false'}">${name}</div><div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>`;
+    el.className = 'int-item editable-row has-link';
+    el.dataset.url = '';
+    el.setAttribute('onclick','intItemClick(this)');
+    el.innerHTML = `<i class="ti ${icon}"></i><div class="int-name" contenteditable="${IS_EDIT?'true':'false'}">${name}</div><div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setIntUrl(this)">🔗</button></div>`;
     document.getElementById('int-grid').appendChild(el);
   });
 }
@@ -951,7 +992,7 @@ function addProject() {
       </div>
       <div class="proj-desc" contenteditable="${ce}">${desc}</div>
       ${hl ? `<div class="proj-highlight" contenteditable="${ce}">${hl}</div>` : ''}
-      <div class="row-actions" style="top:6px;transform:none;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>`;
+      <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>`;
     document.getElementById('proj-grid').appendChild(el);
   });
 }
@@ -972,6 +1013,13 @@ function addCert() {
     const year = document.getElementById('cert-year').value.trim();
     if (!name) return;
     const ce = IS_EDIT ? 'true' : 'false';
+    const wrapper = document.createElement('a');
+    wrapper.className = 'cert-link';
+    wrapper.href = 'javascript:void(0)';
+    wrapper.dataset.certUrl = '';
+    wrapper.target = '_blank';
+    wrapper.rel = 'noopener';
+    wrapper.setAttribute('onclick','certLinkClick(event,this)');
     const el = document.createElement('div');
     el.className = 'cert-item editable-row';
     el.innerHTML = `
@@ -981,8 +1029,9 @@ function addCert() {
         <div class="cert-sub" contenteditable="${ce}">${sub}</div>
       </div>
       <div class="cert-year" contenteditable="${ce}">${year}</div>
-      <div class="row-actions" style="position:static;transform:none;opacity:1;margin-left:8px;"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button></div>`;
-    document.getElementById('cert-list').appendChild(el);
+      <div class="row-actions"><button class="ic-btn dup" onclick="dupRow(this)">⧉</button><button class="ic-btn del" onclick="delRow(this)">✕</button><button class="ic-btn" title="Set URL" onclick="setCertUrl(this)">🔗</button></div>`;
+    wrapper.appendChild(el);
+    document.getElementById('cert-list').appendChild(wrapper);
   });
 }
 
@@ -1080,6 +1129,120 @@ document.addEventListener('keydown', function(e) {
     saveAll();
   }
 });
+
+// ========================
+// AVATAR / PICTURE UPLOAD
+// ========================
+document.getElementById('hero-avatar').addEventListener('click', function() {
+  if (!IS_EDIT) return;
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const av = document.getElementById('hero-avatar');
+      av.style.backgroundImage = "url('" + ev.target.result + "')";
+      av.style.backgroundSize = 'cover';
+      av.style.backgroundPosition = 'center';
+      av.style.fontSize = '0';
+      av.dataset.imgSrc = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+});
+
+// ========================
+// CHIP LINK EDITING (email / phone / linkedin)
+// ========================
+function editChipUrl(linkEl) {
+  const type = linkEl.dataset.chipType;
+  let label = 'URL', placeholder = 'https://...';
+  if (type === 'email') { label = 'Email address'; placeholder = 'you@example.com'; }
+  else if (type === 'phone') { label = 'Phone number'; placeholder = '+91XXXXXXXXXX'; }
+  else if (type === 'linkedin') { label = 'LinkedIn URL'; placeholder = 'https://linkedin.com/in/yourprofile'; }
+  openModal('Set ' + label, [
+    {id:'chip-url-val', label: label, type:'text', placeholder}
+  ], () => {
+    let val = document.getElementById('chip-url-val').value.trim();
+    if (!val) return;
+    if (type === 'email' && !val.startsWith('mailto:')) val = 'mailto:' + val;
+    else if (type === 'phone' && !val.startsWith('tel:')) val = 'tel:' + val.replace(/\s/g,'');
+    linkEl.href = val;
+  });
+}
+
+// In edit mode, clicking a chip-link opens URL editor instead of following link
+document.addEventListener('click', function(e) {
+  if (!IS_EDIT) return;
+  const link = e.target.closest('.chip-link');
+  if (link) { e.preventDefault(); editChipUrl(link); }
+});
+
+// ========================
+// INTEGRATION TILE — open URL in view / set URL in edit
+// ========================
+function intItemClick(el) {
+  if (IS_EDIT) {
+    openModal('Set Integration URL', [
+      {id:'int-url-val', label:'URL (leave blank to remove)', type:'text', placeholder:'https://...'}
+    ], () => {
+      const val = document.getElementById('int-url-val').value.trim();
+      el.dataset.url = val;
+      el.classList.toggle('has-link', !!val);
+    });
+    return;
+  }
+  const url = el.dataset.url;
+  if (url) window.open(url, '_blank', 'noopener');
+}
+
+function setIntUrl(btn) {
+  const tile = btn.closest('.int-item');
+  openModal('Set Integration URL', [
+    {id:'int-url-val', label:'URL (leave blank to remove)', type:'text', placeholder:'https://...'}
+  ], () => {
+    const val = document.getElementById('int-url-val').value.trim();
+    tile.dataset.url = val;
+    tile.classList.toggle('has-link', !!val);
+  });
+}
+
+// ========================
+// CERT LINK — open URL in view / set URL in edit
+// ========================
+function certLinkClick(e, linkEl) {
+  if (IS_EDIT) {
+    e.preventDefault();
+    openModal('Set Certification URL', [
+      {id:'cert-url-val', label:'Certification URL', type:'text', placeholder:'https://learn.microsoft.com/...'}
+    ], () => {
+      const val = document.getElementById('cert-url-val').value.trim();
+      linkEl.href = val || 'javascript:void(0)';
+      linkEl.dataset.certUrl = val;
+    });
+    return;
+  }
+  const url = linkEl.dataset.certUrl || linkEl.getAttribute('href');
+  if (!url || url === 'javascript:void(0)' || url === '') { e.preventDefault(); }
+}
+
+function setCertUrl(btn) {
+  const certItem = btn ? btn.closest('.cert-item') : null;
+  const linkEl = certItem ? certItem.closest('.cert-link') : null;
+  if (!certItem || !linkEl) return;
+  openModal('Set Certification URL', [
+    {id:'cert-url-val', label:'Certification URL', type:'text', placeholder:'https://learn.microsoft.com/...'}
+  ], () => {
+    const val = document.getElementById('cert-url-val').value.trim();
+    linkEl.href = val || 'javascript:void(0)';
+    linkEl.dataset.certUrl = val;
+  });
+}
+
 </script>
 </body>
 </html>
