@@ -73,7 +73,7 @@
   .savings-left{color:#fff;flex:1;}
   .savings-title{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;margin-bottom:4px;}
   .savings-amount{font-family:'DM Serif Display',serif;font-size:2.2rem;color:#fff;line-height:1;}
-  .savings-sub覆{font-size:11px;opacity:0.6;margin-top:2px;}
+  .savings-sub{font-size:11px;opacity:0.6;margin-top:2px;}
   .savings-right{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;text-align:right;}
   .savings-stat{color:#fff;font-size:12px;opacity:0.8;}
   .savings-stat strong{display:block;font-size:15px;opacity:1;}
@@ -182,13 +182,11 @@
     .people-grid{grid-template-columns:repeat(2,1fr);}
   }
 </style>
-<!-- ─── LOAD SUPABASE CORE SDK LIBRARY ─── -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body data-user-role="visitor">
 <div class="port">
 
-  <!-- HERO -->
   <div class="hero">
     <div>
       <div class="hero-badge"><i class="ti ti-building"></i> Open to Opportunities</div>
@@ -207,7 +205,6 @@
     </div>
   </div>
 
-  <!-- STATS -->
   <div class="stats-row">
     <div class="stat-card"><div class="stat-num">4+</div><div class="stat-label">Years Experience</div></div>
     <div class="stat-card"><div class="stat-num stat-accent">9+</div><div class="stat-label">Major Integrations</div></div>
@@ -215,7 +212,6 @@
     <div class="stat-card"><div class="stat-num stat-accent">1</div><div class="stat-label">Azure Certification</div></div>
   </div>
 
-  <!-- SEPARATE FUE METRICS SECTION -->
   <div class="fue-section">
     <div class="sec-head">
       <i class="ti ti-id"></i>
@@ -239,7 +235,6 @@
     </div>
   </div>
 
-  <!-- CLOUD SAVINGS BANNER -->
   <div class="savings-banner">
     <div class="savings-left">
       <div class="savings-title">Cloud Cost Optimization Achievement</div>
@@ -254,7 +249,6 @@
     </div>
   </div>
 
-  <!-- TECHNICAL SKILLS -->
   <div class="section" id="skills-section">
     <div class="sec-head">
       <i class="ti ti-code"></i>
@@ -279,7 +273,6 @@
     </div>
   </div>
 
-  <!-- KEY INTEGRATIONS -->
   <div class="section">
     <div class="sec-head">
       <i class="ti ti-plug"></i>
@@ -291,7 +284,6 @@
     <div class="int-grid" id="int-grid"></div>
   </div>
 
-  <!-- PROJECTS -->
   <div class="section">
     <div class="sec-head">
       <i class="ti ti-stack-2"></i>
@@ -303,7 +295,6 @@
     <div class="proj-grid" id="proj-grid"></div>
   </div>
 
-  <!-- EXPERIENCE -->
   <div class="section">
     <div class="sec-head">
       <i class="ti ti-briefcase"></i>
@@ -315,7 +306,6 @@
     <div id="exp-list"></div>
   </div>
 
-  <!-- CERTIFICATIONS -->
   <div class="section">
     <div class="sec-head">
       <i class="ti ti-certificate"></i>
@@ -327,7 +317,6 @@
     <div id="cert-list"></div>
   </div>
 
-  <!-- ECC SUPPORT -->
   <div class="section">
     <div class="sec-head">
       <i class="ti ti-headset"></i>
@@ -349,7 +338,6 @@
     </div>
   </div>
 
-  <!-- PEOPLE (read-only) -->
   <div class="section">
     <div class="sec-head">
       <i class="ti ti-users"></i>
@@ -364,7 +352,6 @@
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal" id="modal-box">
     <h3 id="modal-title"><i class="ti ti-edit"></i> Edit</h3>
@@ -382,7 +369,7 @@ const SUPABASE_URL = "https://mfcbafliiglihnxcupet.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_X480gFLA54kYzv2ZJrJqSA_ZQnoo4xJ";
 const SECRET_ACCESS_KEY = "iampaneeeee"; 
 
-let supabase = null; // Single global variable declaration
+let supabase = null; 
 
 // Local Baseline Layout Datasets
 let data = {
@@ -426,7 +413,6 @@ if (urlParams.get('edit') === SECRET_ACCESS_KEY) {
 // ─── 3. DATABASE CLIENT INITIALIZATION ──────────────────────────────────────
 try {
   if (window.supabase && typeof window.supabase.createClient === 'function') {
-    // Reuses global variable without re-declaring it with "let" or "const"
     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   } else {
     console.warn("Supabase CDN not completely ready. Defaulting to safe environment layout.");
@@ -714,7 +700,7 @@ function saveModal(){
     const year = document.getElementById('m-cert-year').value.trim();
     if(!name) return;
     if(currentModal === 'add-cert'){
-      data.certifications.push({id:++nextId, icon:'ti-certificate', iconBg:'#f5f5f0', iconColor:#666, name, sub, year});
+      data.certifications.push({id:++nextId, icon:'ti-certificate', iconBg:'#f5f5f0', iconColor:'#666', name, sub, year});
     } else {
       const c = data.certifications.find(x=>x.id===editingId);
       if(c){ c.name=name; c.sub=sub; c.year=year; }
