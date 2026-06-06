@@ -636,8 +636,10 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
 // ========================
 // SUPABASE SETUP
 // ========================
-const SUPABASE_URL_KEY = 'https://bvxcbpklzansidsjxgnq.supabase.co';
-const SUPABASE_KEY_KEY = 'sb_publishable_QV35tJhuui7VVCZDor0Kxg_2_VwZwxr';
+const SUPABASE_URL     = 'https://bvxcbpklzansidsjxgnq.supabase.co';
+const SUPABASE_KEY     = 'sb_publishable_QV35tJhuui7VVCZDor0Kxg_2_VwZwxr';
+const SUPABASE_URL_KEY = 'portfolio_supabase_url';
+const SUPABASE_KEY_KEY = 'portfolio_supabase_key';
 const DATA_ROW_ID = 'main';
 let supabaseClient = null;
 
@@ -690,10 +692,10 @@ document.getElementById('cfg-skip').onclick = function() {
 const IS_EDIT = new URLSearchParams(window.location.search).get('edit') === 'Iampaneeeee';
 
 window.addEventListener('DOMContentLoaded', async () => {
-  const {url, key} = getSavedCreds();
-  if (url && key) initSupabase(url, key);
+  // Always init with hardcoded creds — works in incognito and for all visitors
+  initSupabase(SUPABASE_URL, SUPABASE_KEY);
 
-  // Load data from Supabase for all visitors
+  // Load saved data from Supabase for ALL visitors (view + edit)
   await loadData();
 
   if (IS_EDIT) {
@@ -708,15 +710,14 @@ function activateEditMode() {
   document.querySelectorAll('[contenteditable="false"]').forEach(el => {
     el.setAttribute('contenteditable', 'true');
   });
-  // Check supabase
-  const {url, key} = getSavedCreds();
-  if (!url || !key) {
+  // Check supabase — use hardcoded creds so it's always connected
+  if (supabaseClient) {
+    document.getElementById('tb-status').textContent = '● Connected';
+    document.getElementById('tb-status').style.color = '#4ade80';
+  } else {
     setTimeout(openCfgPanel, 500);
     document.getElementById('tb-status').textContent = '○ Not connected';
     document.getElementById('tb-status').style.color = '#fbbf24';
-  } else {
-    document.getElementById('tb-status').textContent = '● Connected';
-    document.getElementById('tb-status').style.color = '#4ade80';
   }
 }
 
@@ -754,14 +755,19 @@ async function loadData() {
     if (error || !data) return;
     if (data.data && data.data.html) {
       document.getElementById('main-port').innerHTML = data.data.html;
-      // Re-attach edit controls if in edit mode
       if (IS_EDIT) {
+        // Re-enable editing after innerHTML replace
         document.querySelectorAll('[contenteditable="false"]').forEach(el => {
           el.setAttribute('contenteditable', 'true');
         });
+      } else {
+        // VIEW MODE: strip contenteditable entirely so mobile cannot edit
+        document.querySelectorAll('[contenteditable]').forEach(el => {
+          el.removeAttribute('contenteditable');
+        });
       }
     }
-  } catch(e) { /* silent fail — use default HTML */ }
+  } catch(e) { /* silent fail — show default HTML */ }
 }
 
 function showSaveStatus(msg, ok) {
