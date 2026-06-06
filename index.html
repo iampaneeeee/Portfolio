@@ -17,8 +17,7 @@
   .hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:var(--accent2);opacity:0.06;border-radius:50%;}
   .hero-badge{display:inline-flex;align-items:center;gap:6px;background:#f0f7ff;color:#1a5cb5;font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;margin-bottom:12px;border:0.5px solid #c8dfff;}
   .hero h1{font-family:'DM Serif Display',serif;font-size:2.4rem;font-weight:400;line-height:1.1;margin-bottom:6px;}
-  .hero h1 span{color:inherit;font-style:normal;}
-  .hero h1 #hero-h1-accent, .hero h1 #hero-h1-sub{color:var(--accent2);font-style:italic;}
+  .hero h1 span{color:var(--accent2);font-style:italic;}
   .hero-role{font-size:1rem;color:var(--muted);margin-bottom:16px;}
   .hero-contacts{display:flex;flex-wrap:wrap;gap:8px;}
   .chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:5px 10px;border-radius:8px;border:0.5px solid var(--border);color:var(--muted);background:var(--soft);}
@@ -102,8 +101,6 @@
     border-bottom:1.5px dashed var(--accent2);
     cursor:text;
     min-width:20px;
-  }
-  body.edit-mode [contenteditable]:not(div){
     display:inline-block;
   }
   body.edit-mode [contenteditable]:hover{background:rgba(233,69,96,0.05);border-radius:3px;}
@@ -207,8 +204,8 @@
   .add-btn:hover{background:rgba(233,69,96,0.1);border-color:var(--accent2);}
 
   /* section edit header highlight */
-  body.edit-mode .section, body.edit-mode .stat-card{position:relative;}
-  body.edit-mode .section:hover::after, body.edit-mode .stat-card:hover::after{
+  body.edit-mode .section,.body.edit-mode .stat-card{position:relative;}
+  body.edit-mode .section:hover::after,.body.edit-mode .stat-card:hover::after{
     content:'';position:absolute;inset:0;border-radius:inherit;border:1.5px dashed rgba(233,69,96,0.25);pointer-events:none;
   }
 
@@ -308,7 +305,7 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
       <button class="add-btn" onclick="addChip()"><i class="ti ti-plus"></i> Add Contact</button>
     </div>
     <div class="avatar-wrap">
-      <div class="avatar" id="hero-avatar">YN</div>
+      <div class="avatar" contenteditable="false" id="hero-avatar">YN</div>
       <div class="avail-label"><span class="avail-dot"></span><span contenteditable="false" id="hero-avail">Available</span></div>
     </div>
   </div>
@@ -373,7 +370,7 @@ CREATE TABLE portfolio_data (id TEXT PRIMARY KEY, data JSONB, updated_at TIMESTA
         <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">SAP Fiori</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
         <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">SAP BTP</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
         <div class="skill-item editable-row"><i class="ti ti-circle-check"></i><span class="skill-name" contenteditable="false">SAP ECC</span><div class="row-actions"><button class="ic-btn dup" title="Duplicate" onclick="dupRow(this)">⧉</button><button class="ic-btn del" title="Remove" onclick="delRow(this)">✕</button></div></div>
-        <button class="add-btn" onclick="addSkillItem(this.closest('.skill-group'))"><i class="ti ti-plus"></i> Add Skill</button>
+        <button class="add-btn" onclick="addSkillItem(this.previousElementSibling.closest('.skill-group')||this.closest('.skill-group'))"><i class="ti ti-plus"></i> Add Skill</button>
       </div>
       <div class="skill-group" id="skill-group-1">
         <h4 contenteditable="false">Cloud & Infrastructure</h4>
@@ -699,9 +696,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   // Load data from Supabase for all visitors
   await loadData();
 
-  // Attach avatar listener after DOM is ready (and after loadData may have replaced innerHTML)
-  attachAvatarListener();
-
   if (IS_EDIT) {
     activateEditMode();
   }
@@ -710,9 +704,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 function activateEditMode() {
   document.body.classList.add('edit-mode');
   document.getElementById('edit-toolbar').style.display = 'flex';
-  // Make all contenteditable="false" → "true", except the avatar (never text-editable)
+  // Make all contenteditable="false" → "true"
   document.querySelectorAll('[contenteditable="false"]').forEach(el => {
-    if (el.id === 'hero-avatar') return;
     el.setAttribute('contenteditable', 'true');
   });
   // Check supabase
@@ -736,23 +729,7 @@ async function saveAll() {
     openCfgPanel();
     return;
   }
-  // Clone the DOM and strip contenteditable="true" so view mode always gets read-only HTML
-  const clone = document.getElementById('main-port').cloneNode(true);
-  clone.querySelectorAll('[contenteditable="true"]').forEach(el => {
-    el.setAttribute('contenteditable', 'false');
-  });
-  // Persist avatar image: bake background-image style into the cloned avatar element
-  const origAv = document.getElementById('hero-avatar');
-  const cloneAv = clone.querySelector('#hero-avatar');
-  if (origAv && cloneAv && origAv.dataset.imgSrc) {
-    cloneAv.style.backgroundImage = "url('" + origAv.dataset.imgSrc + "')";
-    cloneAv.style.backgroundSize = 'cover';
-    cloneAv.style.backgroundPosition = 'center';
-    cloneAv.style.fontSize = '0';
-    cloneAv.dataset.imgSrc = origAv.dataset.imgSrc;
-    cloneAv.textContent = '';
-  }
-  const html = clone.innerHTML;
+  const html = document.getElementById('main-port').innerHTML;
   try {
     const {error} = await supabaseClient.from('portfolio_data').upsert({
       id: DATA_ROW_ID,
@@ -777,10 +754,9 @@ async function loadData() {
     if (error || !data) return;
     if (data.data && data.data.html) {
       document.getElementById('main-port').innerHTML = data.data.html;
-      // Re-attach edit controls if in edit mode (avatar excluded)
+      // Re-attach edit controls if in edit mode
       if (IS_EDIT) {
         document.querySelectorAll('[contenteditable="false"]').forEach(el => {
-          if (el.id === 'hero-avatar') return;
           el.setAttribute('contenteditable', 'true');
         });
       }
@@ -812,18 +788,8 @@ function delRow(btn) {
 
 function dupRow(btn) {
   const row = btn.closest('.editable-row');
-  // If row is inside a cert-link, duplicate the whole wrapper
-  const parent = row.parentElement;
-  if (parent && parent.classList.contains('cert-link')) {
-    const wrapClone = parent.cloneNode(true);
-    // Clear cert-url on clone so it doesn't share the link
-    wrapClone.href = 'javascript:void(0)';
-    wrapClone.dataset.certUrl = '';
-    parent.parentNode.insertBefore(wrapClone, parent.nextSibling);
-  } else {
-    const clone = row.cloneNode(true);
-    row.parentNode.insertBefore(clone, row.nextSibling);
-  }
+  const clone = row.cloneNode(true);
+  row.parentNode.insertBefore(clone, row.nextSibling);
 }
 
 // ========================
@@ -1167,35 +1133,27 @@ document.addEventListener('keydown', function(e) {
 // ========================
 // AVATAR / PICTURE UPLOAD
 // ========================
-function attachAvatarListener() {
-  const av = document.getElementById('hero-avatar');
-  if (!av) return;
-  // Remove any existing listener by cloning the node
-  const fresh = av.cloneNode(true);
-  av.parentNode.replaceChild(fresh, av);
-  fresh.addEventListener('click', function() {
-    if (!IS_EDIT) return;
-    const inp = document.createElement('input');
-    inp.type = 'file';
-    inp.accept = 'image/*';
-    inp.onchange = function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        const target = document.getElementById('hero-avatar');
-        target.style.backgroundImage = "url('" + ev.target.result + "')";
-        target.style.backgroundSize = 'cover';
-        target.style.backgroundPosition = 'center';
-        target.style.fontSize = '0';
-        target.dataset.imgSrc = ev.target.result;
-      };
-      reader.readAsDataURL(file);
+document.getElementById('hero-avatar').addEventListener('click', function() {
+  if (!IS_EDIT) return;
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const av = document.getElementById('hero-avatar');
+      av.style.backgroundImage = "url('" + ev.target.result + "')";
+      av.style.backgroundSize = 'cover';
+      av.style.backgroundPosition = 'center';
+      av.style.fontSize = '0';
+      av.dataset.imgSrc = ev.target.result;
     };
-    inp.click();
-  });
-}
-// (avatar listener is attached in DOMContentLoaded after loadData)
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+});
 
 // ========================
 // CHIP LINK EDITING (email / phone / linkedin)
